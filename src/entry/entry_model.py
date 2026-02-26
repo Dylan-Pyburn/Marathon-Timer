@@ -14,12 +14,20 @@ class EntryModel:
         self.meibo_path = 'meibo.csv'
         
         self.load_meibo()
+
         
+    
+    #=============================================
+    #      File Operations
+    #=============================================        
 
-    def set_meibo_path(self):
-        pass
+    def set_meibo_path(self, path:str) -> None:
+        self.meibo_path = path
+        
+    def get_meibo_path(self) -> str:
+        return self.meibo_path
 
-    def load_meibo(self):
+    def load_meibo(self) -> None:
         self.meibo_data = defaultdict(dict)
 
         with open(self.meibo_path, mode='r', encoding='utf-8') as csv_file:
@@ -32,12 +40,6 @@ class EntryModel:
                     '性別': row['性別']
                 }
 
-    def get_student_info(self, studentClass, studentNumber) -> dict:
-        try:
-            return self.meibo_data[studentClass][studentNumber]
-        except KeyError:
-            return None
-
     def open_records(self):
         pass
 
@@ -46,6 +48,26 @@ class EntryModel:
 
     def saveAs_records(self):
         pass
+
+    #=============================================
+    #      Data Processing
+    #=============================================
+
+    def get_student_info(self, studentClass:str, studentNumber:str) -> dict:
+        '''
+        組と出席番号を使い、ある生徒の苗字、名前、性別を調べる
+
+        Params:
+            (str) studentClass  :  組
+            (str) studentNumber :  出席番号
+        Return:
+            ある: dict{苗字, 名前, 性別}
+            ない: None
+        '''
+        try:
+            return self.meibo_data[studentClass][studentNumber]
+        except KeyError:
+            return None
 
     #=============================================
     #      Data Validataion
