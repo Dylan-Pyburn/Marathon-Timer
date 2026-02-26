@@ -2,9 +2,9 @@ import src.entry.entry_model as em
 
 class EntryController:
 
-    def __init__(self, view):
-        self.view = view
-
+    def __init__(self, view, model):
+        self.view   = view
+        self.model  = model
 
     def clicked_saveButton(self):
         self._reset_labelMessage()
@@ -14,8 +14,10 @@ class EntryController:
         studentRank     = self.view.var_studentRank.get().strip().upper()
         
         if self._check_data(studentClass, studentNumber, studentRank):
-            newEntry        = '{:<8}{:8}{}'.format(studentClass, studentNumber, studentRank)
+            newEntry    = '{:<8}{:8}{}'.format(studentClass, studentNumber, studentRank)
             
+
+
             self.view.listboxDataView.insert('1', newEntry)
             self._reset_vars()
 

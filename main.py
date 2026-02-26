@@ -8,10 +8,10 @@ from src.entry.entry_model import EntryModel
 
 if __name__ == '__main__':
 
-    #App().start()
+    App().start()
 
-    em = EntryModel()
+    #em = EntryModel()
   
-    student= em.get_student_info('M31', '5')
+    #student= em.get_student_info('M31', '5')
 
-    print(student)
+   # print(student)

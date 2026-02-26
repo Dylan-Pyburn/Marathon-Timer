@@ -13,6 +13,8 @@ class EntryModel:
     def __init__(self):
         self.meibo_path = 'meibo.csv'
         
+        self.entry_data = []
+
         self.load_meibo()
 
         
@@ -68,6 +70,27 @@ class EntryModel:
             return self.meibo_data[studentClass][studentNumber]
         except KeyError:
             return None
+
+    def add_entry(self, studentClass, studentNumber, studentRank) -> bool:
+        studentInfo = self.get_student_info(studentClass, studentNumber)
+
+        if studenInfo == None:
+            return False
+
+        studentFamilyName   = studentInfo['苗字']
+        studentFirstName    = studentInfo['名前']
+        studentGender       = studentInfo['性別']
+
+        self.entry_data.append({
+            '順位'  : studentRank,
+            '組'    : studentClass,
+            '番号'  : StudentNumber,
+            '性別'  : studentGender,
+            '苗字'  : studentFamilyName,
+            '名前'  : studentFirstName
+        })
+
+
 
     #=============================================
     #      Data Validataion

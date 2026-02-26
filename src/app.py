@@ -2,6 +2,7 @@ import  tkinter as      tk
 from    tkinter import  ttk
 
 from src.entry.entry_view       import EntryView
+from src.entry.entry_model      import EntryModel
 from src.entry.entry_controller import EntryController
 
 '''
@@ -48,7 +49,8 @@ class App(tk.Tk):
         self.configure_menubar()
 
         self.entryFrame         = EntryView(self)
-        self.entryController    = EntryController(self.entryFrame)
+        self.entryModel         = EntryModel()
+        self.entryController    = EntryController(self.entryFrame, self.entryModel)
 
         self.entryFrame.set_controller(self.entryController)
         self.entryFrame.grid(row=0, column=0, padx=20, pady=20)
