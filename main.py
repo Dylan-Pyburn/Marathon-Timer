@@ -1,4 +1,4 @@
-from src import view
+from src.app import App
 
 #=================================================
 #       Main
@@ -6,8 +6,8 @@ from src import view
 
 if __name__ == '__main__':
 
-    app = view.View()
+    app = App()
 
-    app.root.mainloop()
+    app.start()
 
 
