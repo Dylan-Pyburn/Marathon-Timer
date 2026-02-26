@@ -14,6 +14,7 @@ TODO
             student can be found in meibo
             show error label
         read from meibo:
+            error checking to verify format/integrity of csv data
             class combobox
             number combobox
         combobox autocomplete

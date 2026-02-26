@@ -42,7 +42,7 @@ class EntryView(Frame):
         self.labelStudentRank       = Label(self.frameDataEntry, text='順位')
         self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
 
-        self.buttonSaveChange       = Button(self.frameDataEntry, text='保存')
+        self.buttonSaveEntries      = Button(self.frameDataEntry, text='保存',  command=self.clicked_buttonSaveEntries)
         self.buttonEnterData        = Button(self.frameDataEntry, text='追加',  command=self.clicked_buttonEnterData)
 
         self.labelMessage           = Label(self.frameDataEntry, fg='red')
@@ -61,7 +61,7 @@ class EntryView(Frame):
         self.labelStudentRank.grid(     row=0,  column=2,   padx=10,    pady=10)
         self.entryStudentRank.grid(     row=1,  column=2,   padx=10,    pady=10)
 
-        self.buttonSaveChange.grid(     row=0,  column=3,   padx=20,    pady=10)
+        self.buttonSaveEntries.grid(    row=0,  column=3,   padx=20,    pady=10)
         self.buttonEnterData.grid(      row=1,  column=3,   padx=20,    pady=10)
 
         self.labelMessage.grid(         row=3,  column=0,   padx=10,    pady=10)
@@ -89,14 +89,15 @@ class EntryView(Frame):
     def pressed_enter(self, event):
         print("enter pressed")
         if self.controller:
-            self.controller.clicked_saveButton()
+            self.controller.clicked_add_entry()
 
     def clicked_buttonEnterData(self):
         if self.controller:
-            self.controller.clicked_saveButton()
+            self.controller.clicked_add_entry()
 
-    def clicked_buttonSaveChange(self):
-        pass
+    def clicked_buttonSaveEntries(self):
+        if self.controller:
+            self.controller.clicked_save_entries()
 
     def clicked_listBoxData(self):
         pass

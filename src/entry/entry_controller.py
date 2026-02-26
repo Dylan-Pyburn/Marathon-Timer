@@ -6,7 +6,7 @@ class EntryController:
         self.view   = view
         self.model  = model
 
-    def clicked_saveButton(self):
+    def clicked_add_entry(self):
         self._reset_labelMessage()
         
         studentClass    = self.view.var_studentClass.get().strip().upper()
@@ -23,6 +23,11 @@ class EntryController:
             entryText   = f'{newEntry['性別']}{newEntry['順位']}  {newEntry['組']}  #{newEntry['番号']}  {newEntry['苗字']} {newEntry['名前']}'
             self.view.listboxDataView.insert('1', entryText)
             self._reset_vars()
+
+    def clicked_save_entries(self):
+        #TODO get path to save if not set?
+
+        self.model.save_entries()
 
 
     def _reset_labelMessage(self):

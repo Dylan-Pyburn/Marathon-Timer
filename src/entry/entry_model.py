@@ -2,16 +2,13 @@
 from collections import defaultdict
 import csv
 
-CLASSES = [
-    'M11', 'M12', 'E11', 'E12', 'B1', 'C1',
-    'M21', 'M22', 'E21', 'E32', 'B2', 'C2',
-    'M31', 'M32', 'E31', 'E32', 'B3', 'C3'
-]
+ENTRY_FIELDS = ['順位','組','番号','性別','苗字','名前']
 
 class EntryModel:
 
     def __init__(self):
-        self.meibo_path = 'meibo.csv'
+        self.meibo_path     = 'meibo.csv'
+        self.entries_path   = 'entries.csv'
         
         self.meibo_data = {}
         self.entry_data = []
@@ -20,7 +17,6 @@ class EntryModel:
 
         self.load_meibo()
 
-        
     
     #=============================================
     #      File Operations
@@ -47,14 +43,28 @@ class EntryModel:
         
         self.meibo_classes = [k for k in self.meibo_data.keys()]
 
-    def open_records(self):
+    def open_rs(self):
         pass
 
-    def save_records(self):
-        pass
+    
+    def get_entries_path(self) -> str:
+        return self.entries_path
 
-    def saveAs_records(self):
-        pass
+    
+    def set_entries_path(self, path:str) -> None:
+        self.entries_path = path
+    
+
+    def save_entries(self):
+        if len(self.entry_data) == 0:
+            return
+
+        with open(self.entries_path, mode='w', encoding='utf-8') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=ENTRY_FIELDS)
+
+            csv_writer.writeheader()
+            csv_writer.writerows(self.entry_data)
+
 
     #=============================================
     #      Data Processing
@@ -86,16 +96,18 @@ class EntryModel:
         studentFirstName    = studentInfo['名前']
         studentGender       = studentInfo['性別']
 
-        self.entry_data.append({
+        newEntry = {
             '順位'  : studentRank,
             '組'    : studentClass,
             '番号'  : studentNumber,
             '性別'  : studentGender,
             '苗字'  : studentFamilyName,
             '名前'  : studentFirstName
-        })
+        }
 
-        return self.entry_data[-1]
+        self.entry_data.append(newEntry)
+        return newEntry
+
 
     def get_student_classes(self):
         return self.meibo_classes
