@@ -71,11 +71,11 @@ class EntryModel:
         except KeyError:
             return None
 
-    def add_entry(self, studentClass, studentNumber, studentRank) -> bool:
+    def add_entry(self, studentClass, studentNumber, studentRank):
         studentInfo = self.get_student_info(studentClass, studentNumber)
 
-        if studenInfo == None:
-            return False
+        if studentInfo == None:
+            return None
 
         studentFamilyName   = studentInfo['苗字']
         studentFirstName    = studentInfo['名前']
@@ -84,11 +84,13 @@ class EntryModel:
         self.entry_data.append({
             '順位'  : studentRank,
             '組'    : studentClass,
-            '番号'  : StudentNumber,
+            '番号'  : studentNumber,
             '性別'  : studentGender,
             '苗字'  : studentFamilyName,
             '名前'  : studentFirstName
         })
+
+        return self.entry_data[-1]
 
 
 

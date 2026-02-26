@@ -14,11 +14,13 @@ class EntryController:
         studentRank     = self.view.var_studentRank.get().strip().upper()
         
         if self._check_data(studentClass, studentNumber, studentRank):
-            newEntry    = '{:<8}{:8}{}'.format(studentClass, studentNumber, studentRank)
             
+            newEntry = self.model.add_entry(studentClass, studentNumber, studentRank)
+
+            entry = f'{newEntry['性別']}{newEntry['順位']}  {newEntry['組']}  #{newEntry['番号']}  {newEntry['苗字']} {newEntry['名前']}'
 
 
-            self.view.listboxDataView.insert('1', newEntry)
+            self.view.listboxDataView.insert('1', entry)
             self._reset_vars()
 
 

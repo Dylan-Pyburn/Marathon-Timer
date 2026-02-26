@@ -34,7 +34,7 @@ TODO
 '''
 
 WINDOW_TITLE    = 'マラソン タイマー'
-WINDOW_WIDTH    = 600
+WINDOW_WIDTH    = 700
 WINDOW_HEIGHT   = 500
 
 class App(tk.Tk):
