@@ -82,6 +82,6 @@ class EntryController:
 
         if not int(studentRank) > 0:
             self.view.labelMessage.config(text=f'順位「{studentRank}」 は０より大きくなければなりません')
-            return False 
+            return False
 
         return True
