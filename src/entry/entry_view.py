@@ -4,21 +4,27 @@ class EntryView(Frame):
 
     def __init__(self, parent):
         super().__init__(parent)
+        
+        self.controller = None
 
         self.config(bg='skyblue')
 
-        self.var_studentClass   = StringVar(self)
-        self.var_studentNumber  = StringVar(self)
-        self.var_studentRank    = StringVar(self)
-
-        #label = Label(self, text="hello world")
-        #label.pack()
-
-
+        self.configure_vars()
         self.configure_frameDataEntry()
         self.configure_frameDataView()
 
-        
+    def configure_vars(self):
+        self.var_studentClass   = StringVar(self)
+        self.var_studentNumber  = StringVar(self)
+        self.var_studentRank    = StringVar(self)
+    
+
+    def set_controller(self, controller):
+        self.controller = controller
+    
+    #=============================================
+    #      UI Elements
+    #=============================================
 
     #== Data Entry =============================== 
 
@@ -69,3 +75,16 @@ class EntryView(Frame):
         self.listboxDataView.pack(side=LEFT, fill=BOTH)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
+
+    #=============================================
+    #      Commands
+    #=============================================
+
+    def clicked_buttonEnterData(self):
+        pass
+
+    def clicked_buttonSaveChange(self):
+        pass
+
+    def clicked_listBoxData(self):
+        pass

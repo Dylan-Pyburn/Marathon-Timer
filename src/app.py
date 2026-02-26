@@ -3,6 +3,17 @@ from    tkinter import  ttk
 
 from src.entry.entry_view import EntryView
 
+'''
+TODO
+    add menu
+    add tabs
+
+    timer
+    stats
+'''
+
+
+
 WINDOW_TITLE    = 'マラソン タイマー'
 WINDOW_WIDTH    = 1200
 WINDOW_HEIGHT   = 700
@@ -22,7 +33,3 @@ class App(tk.Tk):
 
     def start(self):
         self.mainloop()
-
-    
-
-
