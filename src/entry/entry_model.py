@@ -13,7 +13,10 @@ class EntryModel:
     def __init__(self):
         self.meibo_path = 'meibo.csv'
         
+        self.meibo_data = {}
         self.entry_data = []
+
+        self.meibo_classes = []
 
         self.load_meibo()
 
@@ -41,6 +44,8 @@ class EntryModel:
                     '名前': row['名前'],
                     '性別': row['性別']
                 }
+        
+        self.meibo_classes = [k for k in self.meibo_data.keys()]
 
     def open_records(self):
         pass
@@ -55,7 +60,7 @@ class EntryModel:
     #      Data Processing
     #=============================================
 
-    def get_student_info(self, studentClass:str, studentNumber:str) -> dict:
+    def meibo_lookup(self, studentClass:str, studentNumber:str) -> dict:
         '''
         組と出席番号を使い、ある生徒の苗字、名前、性別を調べる
 
@@ -72,7 +77,7 @@ class EntryModel:
             return None
 
     def add_entry(self, studentClass, studentNumber, studentRank):
-        studentInfo = self.get_student_info(studentClass, studentNumber)
+        studentInfo = self.meibo_lookup(studentClass, studentNumber)
 
         if studentInfo == None:
             return None
@@ -92,8 +97,82 @@ class EntryModel:
 
         return self.entry_data[-1]
 
+    def get_student_classes(self):
+        return self.meibo_classes
 
+    def get_numbers(self, studentClass):
+        pass
 
     #=============================================
     #      Data Validataion
     #=============================================
+
+    def check_entry_data(self, studentClass, studentNumber, studentRank) -> str:
+        messages = [
+            self._check_studentClass(studentClass),
+            self._check_studentNumber(studentNumber),
+            self._check_studentRank(studentRank)
+        ]
+        for msg in messages:
+            if msg != '':
+                return msg
+
+        # must be checked after because can only be checked with valid data
+        msg = self._check_student(studentClass, studentNumber)
+        if msg != '':
+            return msg
+        
+        return ''
+
+    def _check_student(self, studentClass, studentNumber):
+        # check if the student is in the meibo
+        if not self.meibo_lookup(studentClass, studentNumber):
+            return f'「{studentClass} #{studentNumber}」は名簿には入っていないです'
+
+        # check if the student has already been entered
+        for entry in self.entry_data:
+            if entry['組'] == studentClass and entry['番号'] == studentNumber:
+                return f'{studentClass} #{studentNumber}」は既に入れらました'
+        
+        return ''
+
+
+    def _check_studentClass(self, studentClass) -> str:
+        if studentClass == '':
+            return f'組を入れてください'
+    
+        if not studentClass in self.meibo_classes:
+            return f'組：「{studentClass}」 は名簿にはありません'
+
+        return ''
+
+   
+    def _check_studentNumber(self, studentNumber) -> str:
+        if studentNumber == '':
+            return f'出席番号を入れてください'
+        
+        try:
+            int(studentNumber)
+        except ValueError:
+            return f'番号：「{studentNumber}」 は整数ではありません'
+    
+        nums = [str(x) for x in range(1,42)]
+        if not studentNumber in nums:
+            return f'番号：「{studentNumber}」 は範囲外です'
+
+        return ''
+       
+
+    def _check_studentRank(self, studentRank) -> str:
+        if studentRank == '':
+            return f'順位を入れてください'
+        
+        try:
+            int(studentRank)
+        except ValueError:
+            return f'順位：「{studentRank}」 は整数ではありません'
+
+        if not int(studentRank) > 0:
+            return f'順位「{studentRank}」 は０より大きくなければなりません'
+
+        return ''
