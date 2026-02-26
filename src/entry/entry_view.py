@@ -4,7 +4,6 @@ class EntryView(Frame):
 
     def __init__(self, parent):
         super().__init__(parent)
-        
         self.controller = None
 
         self.config(bg='skyblue')
@@ -40,8 +39,8 @@ class EntryView(Frame):
         self.labelStudentRank       = Label(self.frameDataEntry, text='順位')
         self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
 
-        self.buttonSaveChange       = Button(self.frameDataEntry, text='保存', state=NORMAL)
-        self.buttonEnterData        = Button(self.frameDataEntry, text='追加')
+        self.buttonSaveChange       = Button(self.frameDataEntry, text='保存')
+        self.buttonEnterData        = Button(self.frameDataEntry, text='追加',  command=self.clicked_buttonEnterData)
 
         self.arrange_frameDataEntry()
 
@@ -81,7 +80,8 @@ class EntryView(Frame):
     #=============================================
 
     def clicked_buttonEnterData(self):
-        pass
+        if self.controller:
+            self.controller.clicked_saveButton()
 
     def clicked_buttonSaveChange(self):
         pass

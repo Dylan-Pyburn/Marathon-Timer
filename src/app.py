@@ -1,7 +1,8 @@
 import  tkinter as      tk
 from    tkinter import  ttk
 
-from src.entry.entry_view import EntryView
+from src.entry.entry_view       import EntryView
+from src.entry.entry_controller import EntryController
 
 '''
 TODO
@@ -11,8 +12,6 @@ TODO
     timer
     stats
 '''
-
-
 
 WINDOW_TITLE    = 'マラソン タイマー'
 WINDOW_WIDTH    = 1200
@@ -27,7 +26,10 @@ class App(tk.Tk):
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
         #self.config(bg='white')
 
-        self.entryFrame = EntryView(self)
+        self.entryFrame         = EntryView(self)
+        self.entryController    = EntryController(self.entryFrame)
+
+        self.entryFrame.set_controller(self.entryController)
         self.entryFrame.grid(row=0, column=0, padx=20, pady=20)
 
 
