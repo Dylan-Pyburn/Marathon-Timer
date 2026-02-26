@@ -12,6 +12,9 @@ class EntryView(Frame):
         self.configure_frameDataEntry()
         self.configure_frameDataView()
 
+        #parent.bind('<Return>', self.pressed_enter)
+        #self.bind('<Return>', self.pressed_enter)
+
     def configure_vars(self):
         self.var_studentClass   = StringVar(self)
         self.var_studentNumber  = StringVar(self)
@@ -42,6 +45,8 @@ class EntryView(Frame):
         self.buttonSaveChange       = Button(self.frameDataEntry, text='保存')
         self.buttonEnterData        = Button(self.frameDataEntry, text='追加',  command=self.clicked_buttonEnterData)
 
+        self.labelMessage           = Label(self.frameDataEntry, fg='red')
+
         self.arrange_frameDataEntry()
 
     #== Data View ================================
@@ -59,6 +64,8 @@ class EntryView(Frame):
         self.buttonSaveChange.grid(     row=0,  column=3,   padx=20,    pady=10)
         self.buttonEnterData.grid(      row=1,  column=3,   padx=20,    pady=10)
 
+        self.labelMessage.grid(         row=3,  column=0,   padx=10,    pady=10)
+
         self.frameDataEntry.pack(side='top', anchor="center", pady= 20)
 
     #== Data View ================================ 
@@ -67,7 +74,7 @@ class EntryView(Frame):
         self.frameDataView = Frame(self, width=500, height=100, bg="white")
         self.frameDataView.pack(side='top', anchor='center', pady=20)
 
-        self.listboxDataView = Listbox(self.frameDataView)
+        self.listboxDataView = Listbox(self.frameDataView, selectmode=SINGLE)
         self.scrollbarDataView = Scrollbar(self.frameDataView, command=self.listboxDataView.yview)
         
         self.scrollbarDataView.pack(side=RIGHT, fill='y')
@@ -78,6 +85,11 @@ class EntryView(Frame):
     #=============================================
     #      Commands
     #=============================================
+
+    def pressed_enter(self, event):
+        print("enter pressed")
+        if self.controller:
+            self.controller.clicked_saveButton()
 
     def clicked_buttonEnterData(self):
         if self.controller:

@@ -6,6 +6,25 @@ from src.entry.entry_controller import EntryController
 
 '''
 TODO
+    entryview
+        data extry
+            entered items are valid
+                move to model?
+            student can be found in meibo
+            show error label
+        read from meibo:
+            class combobox
+            number combobox
+        combobox autocomplete
+        lbDataView
+            get more data from meibo (gender, name)
+            edit and entry (repeat data validation)
+
+    entry model and controller
+        read from meibo to populate inital value
+        read from meibo to populate name and gender
+        write to csv
+    
     add menu
     add tabs
 
@@ -32,6 +51,7 @@ class App(tk.Tk):
         self.entryFrame.set_controller(self.entryController)
         self.entryFrame.grid(row=0, column=0, padx=20, pady=20)
 
+        self.bind('<Return>', self.entryFrame.pressed_enter)
 
     def start(self):
         self.mainloop()
