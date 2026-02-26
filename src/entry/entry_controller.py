@@ -1,4 +1,8 @@
-import src.entry.entry_model as em
+from tkinter import filedialog as fd
+
+'''
+https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
+'''
 
 class EntryController:
 
