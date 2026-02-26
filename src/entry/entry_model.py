@@ -11,14 +11,32 @@ CLASSES = [
 class EntryModel:
 
     def __init__(self):
-        self.meibo_path = None
-        self.save_path = None
+        self.meibo_path = 'meibo.csv'
+        
+        self.load_meibo()
+        
 
     def set_meibo_path(self):
         pass
 
     def load_meibo(self):
-        pass
+        self.meibo_data = defaultdict(dict)
+
+        with open(self.meibo_path, mode='r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+
+            for row in csv_reader:
+                self.meibo_data[row['組']][row['番号']] = {
+                    '苗字': row['苗字'],
+                    '名前': row['名前'],
+                    '性別': row['性別']
+                }
+
+    def get_student_info(self, studentClass, studentNumber) -> dict:
+        try:
+            return self.meibo_data[studentClass][studentNumber]
+        except KeyError:
+            return None
 
     def open_records(self):
         pass
@@ -32,4 +50,3 @@ class EntryModel:
     #=============================================
     #      Data Validataion
     #=============================================
-
