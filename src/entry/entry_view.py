@@ -44,6 +44,7 @@ class EntryView(Frame):
 
         self.buttonSaveEntries      = Button(self.frameDataEntry, text='保存',  command=self.clicked_buttonSaveEntries)
         self.buttonEnterData        = Button(self.frameDataEntry, text='追加',  command=self.clicked_buttonEnterData)
+        self.buttonChooseMeiboFile  = Button(self.frameDataEntry, text='名簿',  command=self.clicked_buttonChooseMeiboFile)      
 
         self.labelMessage           = Label(self.frameDataEntry, fg='red')
 
@@ -52,19 +53,20 @@ class EntryView(Frame):
     #== Data View ================================
 
     def arrange_frameDataEntry(self):
-        self.labelStudentClass.grid(    row=0,  column=0,   padx=10,    pady=10)
-        self.entryStudentClass.grid(    row=1,  column=0,   padx=10,    pady=10)
+        self.labelStudentClass.grid(        row=0,  column=0,   padx=10,    pady=10)
+        self.entryStudentClass.grid(        row=1,  column=0,   padx=10,    pady=10)
 
-        self.labelStudentNumber.grid(   row=0,  column=1,   padx=10,    pady=10)
-        self.entryStudentNumber.grid(   row=1,  column=1,   padx=10,    pady=10)
+        self.labelStudentNumber.grid(       row=0,  column=1,   padx=10,    pady=10)
+        self.entryStudentNumber.grid(       row=1,  column=1,   padx=10,    pady=10)
 
-        self.labelStudentRank.grid(     row=0,  column=2,   padx=10,    pady=10)
-        self.entryStudentRank.grid(     row=1,  column=2,   padx=10,    pady=10)
+        self.labelStudentRank.grid(         row=0,  column=2,   padx=10,    pady=10)
+        self.entryStudentRank.grid(         row=1,  column=2,   padx=10,    pady=10)
 
-        self.buttonSaveEntries.grid(    row=0,  column=3,   padx=20,    pady=10)
-        self.buttonEnterData.grid(      row=1,  column=3,   padx=20,    pady=10)
+        self.buttonSaveEntries.grid(        row=0,  column=3,   padx=20,    pady=10)
+        self.buttonEnterData.grid(          row=1,  column=3,   padx=20,    pady=10)
+        self.buttonChooseMeiboFile.grid(    row=2,  column=3,   padx=10,    pady=10)
 
-        self.labelMessage.grid(         row=3,  column=0,   padx=10,    pady=10)
+        self.labelMessage.grid(         row=2,  column=0,   padx=10,    pady=10)
 
         self.frameDataEntry.pack(side='top', anchor="center", pady= 20)
 
@@ -98,6 +100,10 @@ class EntryView(Frame):
     def clicked_buttonSaveEntries(self):
         if self.controller:
             self.controller.clicked_save_entries()
+
+    def clicked_buttonChooseMeiboFile(self):
+        if self.controller:
+            self.controller.clicked_choose_meibo_file()
 
     def clicked_listBoxData(self):
         pass

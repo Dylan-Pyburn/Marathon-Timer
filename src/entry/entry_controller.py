@@ -33,6 +33,23 @@ class EntryController:
 
         self.model.save_entries()
 
+    
+    def clicked_choose_meibo_file(self):
+        filetypes = (('CSV ファイル', '*.csv'), ('全部', '*.*'))
+        path = fd.askopenfilename(
+            title       ='名簿ファイルを選択してください',
+            initialdir  ='.',
+            filetypes   = filetypes 
+        )
+
+        # cancel button clicked, nothing chosen
+        if len(path) == 0:
+            return
+
+        print(path)
+        self.model.set_meibo_path(path)
+        
+        success = self.model.load_meibo()
 
     def _reset_labelMessage(self):
         self.view.labelMessage.config(text='')

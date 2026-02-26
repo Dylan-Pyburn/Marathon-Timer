@@ -15,12 +15,25 @@ TODO
             show error label
         read from meibo:
             error checking to verify format/integrity of csv data
+            cant load new meibo once something has been entered(disable button)
             class combobox
             number combobox
         combobox autocomplete
         lbDataView
             get more data from meibo (gender, name)
             edit and entry (repeat data validation)
+
+    TODO
+    filedialog
+        add all fire dialog operations
+        load entries into listbox
+    data entry
+        edit an entry from the listbox
+    styling
+        make it look purdy
+        auto hide/show scrollbar
+        autofill entries
+        entries combobox
 
     entry model and controller
         read from meibo to populate inital value

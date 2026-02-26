@@ -43,9 +43,7 @@ class EntryModel:
         
         self.meibo_classes = [k for k in self.meibo_data.keys()]
 
-    def open_rs(self):
-        pass
-
+        return True
     
     def get_entries_path(self) -> str:
         return self.entries_path
