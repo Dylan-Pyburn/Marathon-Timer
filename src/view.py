@@ -6,7 +6,7 @@ WINDOW_WIDTH    = 1200
 WINDOW_HEIGHT   = 700
 
 
-class GUI:
+class View:
 
     def __init__(self):
         self.configure_root()

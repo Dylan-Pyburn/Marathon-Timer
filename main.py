@@ -1,4 +1,4 @@
-from src import gui
+from src import view
 
 #=================================================
 #       Main
@@ -6,7 +6,7 @@ from src import gui
 
 if __name__ == '__main__':
 
-    app = gui.GUI()
+    app = view.View()
 
     app.root.mainloop()
 
