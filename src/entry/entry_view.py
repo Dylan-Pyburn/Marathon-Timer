@@ -1,0 +1,71 @@
+from tkinter import *
+
+class EntryView(Frame):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.config(bg='skyblue')
+
+        self.var_studentClass   = StringVar(self)
+        self.var_studentNumber  = StringVar(self)
+        self.var_studentRank    = StringVar(self)
+
+        #label = Label(self, text="hello world")
+        #label.pack()
+
+
+        self.configure_frameDataEntry()
+        self.configure_frameDataView()
+
+        
+
+    #== Data Entry =============================== 
+
+    def configure_frameDataEntry(self):
+        self.frameDataEntry = Frame(self, width=500, height=150,bg="white")
+
+        self.labelStudentClass      = Label(self.frameDataEntry, text='組')
+        self.entryStudentClass      = Entry(self.frameDataEntry, textvariable=self.var_studentClass)
+
+        self.labelStudentNumber     = Label(self.frameDataEntry, text='出席番号')
+        self.entryStudentNumber     = Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
+        
+        self.labelStudentRank       = Label(self.frameDataEntry, text='順位')
+        self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
+
+        self.buttonSaveChange       = Button(self.frameDataEntry, text='保存', state=NORMAL)
+        self.buttonEnterData        = Button(self.frameDataEntry, text='追加')
+
+        self.arrange_frameDataEntry()
+
+    #== Data View ================================
+
+    def arrange_frameDataEntry(self):
+        self.labelStudentClass.grid(    row=0,  column=0,   padx=10,    pady=10)
+        self.entryStudentClass.grid(    row=1,  column=0,   padx=10,    pady=10)
+
+        self.labelStudentNumber.grid(   row=0,  column=1,   padx=10,    pady=10)
+        self.entryStudentNumber.grid(   row=1,  column=1,   padx=10,    pady=10)
+
+        self.labelStudentRank.grid(     row=0,  column=2,   padx=10,    pady=10)
+        self.entryStudentRank.grid(     row=1,  column=2,   padx=10,    pady=10)
+
+        self.buttonSaveChange.grid(     row=0,  column=3,   padx=20,    pady=10)
+        self.buttonEnterData.grid(      row=1,  column=3,   padx=20,    pady=10)
+
+        self.frameDataEntry.pack(side='top', anchor="center", pady= 20)
+
+    #== Data View ================================ 
+
+    def configure_frameDataView(self):
+        self.frameDataView = Frame(self, width=500, height=100, bg="white")
+        self.frameDataView.pack(side='top', anchor='center', pady=20)
+
+        self.listboxDataView = Listbox(self.frameDataView)
+        self.scrollbarDataView = Scrollbar(self.frameDataView, command=self.listboxDataView.yview)
+        
+        self.scrollbarDataView.pack(side=RIGHT, fill='y')
+        self.listboxDataView.pack(side=LEFT, fill=BOTH)
+        
+        self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)

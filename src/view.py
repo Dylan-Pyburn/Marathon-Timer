@@ -152,6 +152,7 @@ class View:
         self.frameAppStats.pack(expand=1, fill=BOTH)
         self.tabControl.add(self.frameAppStats, text='合計')
     
+   
     #=============================================
     #       Commands
     #=============================================
