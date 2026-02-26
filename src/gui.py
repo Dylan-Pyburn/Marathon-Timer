@@ -9,6 +9,12 @@ WINDOW_HEIGHT   = 700
 class GUI:
 
     def __init__(self):
+        self.configure_root()
+        
+        self.var_studentClass   = StringVar(self.root)
+        self.var_studentNumber  = StringVar(self.root)
+        self.var_studentRank    = StringVar(self.root)
+        
         self.configure_gui()
 
     #=============================================
@@ -16,7 +22,6 @@ class GUI:
     #=============================================
 
     def configure_gui(self):
-        self.configure_root()
         self.configure_menubar()
         self.configure_tabControl()
         self.configure_frameTabRankEntry()
@@ -87,13 +92,13 @@ class GUI:
         self.frameDataEntry = Frame(self.frameAppRankEntry, width=500, height=150,bg="white")
 
         self.labelStudentClass      = Label(self.frameDataEntry, text='組')
-        self.entryStudentClass      = Entry(self.frameDataEntry)
+        self.entryStudentClass      = Entry(self.frameDataEntry, textvariable=self.var_studentClass)
 
         self.labelStudentNumber     = Label(self.frameDataEntry, text='出席番号')
-        self.entryStudentNumber     = Entry(self.frameDataEntry)
+        self.entryStudentNumber     = Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
         
         self.labelStudentRank       = Label(self.frameDataEntry, text='順位')
-        self.entryStudentRank       = Entry(self.frameDataEntry)
+        self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
 
         self.buttonSaveChange       = Button(self.frameDataEntry, text='保存', command=self.cmd_buttonSaveChange, state=NORMAL)
         self.buttonEnterData        = Button(self.frameDataEntry, text='追加', command=self.cmd_buttonEnterData)
@@ -155,8 +160,16 @@ class GUI:
         self.buttonSaveChange.config(state=DISABLED)
 
     def cmd_buttonEnterData(self):
+        studentClass    = self.var_studentClass.get()
+        studentNumber   = self.var_studentNumber.get()
+        studentRank     = self.var_studentRank.get()
 
-        self.listboxDataView.insert(END,'hi')
+        self.var_studentClass.set('')
+        self.var_studentNumber.set('')
+        self.var_studentRank.set('')
+
+        #self.listboxDataView.insert(END,f'Class: {studentClass}\t\tNumber: {studentNumber}\t\tRank: {studentRank}')
+        print(f'Class: {studentClass}\t\tNumber: {studentNumber}\t\tRank: {studentRank}')
 
     def cmd_listboxDataView_itemClicked(self):
         pass
