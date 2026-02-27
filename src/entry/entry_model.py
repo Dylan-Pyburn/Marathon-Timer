@@ -49,7 +49,7 @@ class EntryModel:
                 for row in csv_reader:
                     csv_rows.append(row)
         except:
-            return f'error while opening{self.meibo_path}'
+            return f'couldn\'t open file: "{self.meibo_path}"'
 
         # check the meibo data
         msg = self.check_meibo_file_format(fieldnames, csv_rows)
@@ -66,29 +66,28 @@ class EntryModel:
                 '性別': row['性別']
             }
         self.meibo_classes  = [k for k in self.meibo_data.keys()]
-        
 
         return ''
 
     
     def get_entries_path(self) -> str:
         return self.entries_path
-
     
     def set_entries_path(self, path:str) -> None:
-        self.entries_path = path
-    
+        self.entries_path = path    
 
-    def save_entries(self):
+    def save_entries(self) -> str:
         if len(self.entry_data) == 0:
-            return
+            return 'there are no entries to be written'
 
-        with open(self.entries_path, mode='w', encoding='utf-8') as csv_file:
-            csv_writer = csv.DictWriter(csv_file, fieldnames=ENTRY_FIELDS)
-
-            csv_writer.writeheader()
-            csv_writer.writerows(self.entry_data)
-
+        try:
+            with open(self.entries_path, mode='w', newline='', encoding='utf-8') as csv_file:
+                csv_writer = csv.DictWriter(csv_file, fieldnames=ENTRY_FIELDS)
+                csv_writer.writeheader()
+                csv_writer.writerows(self.entry_data)
+            return''
+        except:
+            return f'couldn\'t write to file: "{self.entries_path}"'
 
     #=============================================
     #      Data Processing
@@ -145,6 +144,9 @@ class EntryModel:
     
     def get_entry_rows(self) -> list:
         return self.entry_rows
+    
+    def get_entry_data(self) -> list:
+        return self.entry_data        
     
     def get_meibo_classes(self):
         return self.meibo_classes

@@ -26,6 +26,8 @@ TODO
             overwrite it
         if not file loaded
             save as
+
+    check that a loaded entry file has a correct meibo
     
     data entry
         edit an entry from the listbox
@@ -47,7 +49,8 @@ TODO
         autofill entries
         entries combobox
 
-    
+    make displayed file loacation clickable?
+        
     add tabs
 
     timer

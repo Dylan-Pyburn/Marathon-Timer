@@ -1,6 +1,9 @@
 import  tkinter as      tk
 from    tkinter import  filedialog as fd
 
+RADIO_VIEW_MODES = ['meibo', 'entry']
+
+FILETYPES =  [('CSV ファイル', '*.csv')]
 
 class EntryController:
 
@@ -40,20 +43,33 @@ class EntryController:
         msg = self.model.load_meibo()        
 
         if msg == '':
-            self.view.var_radioDataView.set('meibo')
-            self._update_listboxDataView()
+            self._update_listboxDataView(mode='meibo')
             self._show_label_message(label, path)
             
         else:
             self._show_label_error(label, msg)
 
 
-
     def choose_entry_file(self):
         '''
         Handle the choosing of a new file or loading an existing one
         '''
-        pass
+        label = self.view.labelEntryPath
+        self._reset_label(label)
+
+        path = self._save_as_dialog('結果ファイル')
+        print(f'"{path}"')
+
+        # check that something was chosen
+        if len(path) == 0:
+            return
+
+        # make sure it's non-empty and is csv
+        if path.split('.')[-1] != 'csv':
+            self._show_label_error(label, 'choose a CSV file')
+        else:
+            self.model.set_entries_path(path)
+            self._show_label_message(label, path)
 
 
     def add_entry(self):
@@ -72,15 +88,28 @@ class EntryController:
         else:
             self.model.add_entry(studentClass, studentNumber, studentRank)
 
-            self.view.var_radioDataView.set('entry')
-            self._update_listboxDataView()
+            self._update_listboxDataView(mode='entry')
             self._reset_entryvars()
 
 
     def save_entries(self):
-        #TODO get path to save if not set?
+        self._update_listboxDataView(mode='entry')
+        label = self.view.labelMessage
+        
+        if len(self.model.get_entry_rows()) == 0:
+            self._show_label_message(label, 'there are no entries to write')
+            return
 
-        self.model.save_entries()
+        # choose a file to save to if not already set
+        if self.model.get_entries_path() == '':
+            self.choose_entry_file()
+
+        msg = self.model.save_entries()
+        if msg == '':
+            self._show_label_message(label, f'Entries saved')
+        else:
+            self._show_label_error(label, msg)
+
 
     def handle_radio_display(self):
         self._update_listboxDataView()
@@ -95,13 +124,20 @@ class EntryController:
     #      Dialogs, UI Updates
     #=============================================
 
-    def _open_file_dialog(self, title:str, initialdir:str='.') -> str:
-        filetypes = (('CSV ファイル', '*.csv'), ('全部', '*.*'))
-        
+    def _open_file_dialog(self, title:str, initialdir:str='.') -> str:     
         path = fd.askopenfilename(
             title       = title,
             initialdir  = initialdir,
-            filetypes   = filetypes 
+            filetypes   = FILETYPES
+        )
+        return path
+    
+    def _save_as_dialog(self, title:str, initialdir:str='.') -> str:
+        path = fd.asksaveasfilename(
+            title               = title,
+            initialdir          = initialdir,
+            defaultextension    = '.csv',
+            filetypes           = FILETYPES
         )
         return path
 
@@ -119,8 +155,12 @@ class EntryController:
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')
 
-    def _update_listboxDataView(self):
-        mode = self.view.var_radioDataView.get()
+    def _update_listboxDataView(self, mode:str=''):
+        # set a new mode if provided otherwise use the current mode
+        if mode in RADIO_VIEW_MODES:
+            self.view.var_radioDataView.set(mode)
+        else:
+            mode = self.view.var_radioDataView.get()
 
         if mode == 'meibo':
             self._show_listbox_meibo()

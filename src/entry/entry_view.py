@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
+
 class EntryView(Frame):
 
     def __init__(self, parent):
@@ -43,7 +44,7 @@ class EntryView(Frame):
         self.labelEntryPath         = Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
 
         self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿の読み込み', command=self.clicked_buttonChooseMeiboFile)
-        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果の読み込み', command=self.clicked_buttonChooseEntryFile)
+        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果ファイルの選択', command=self.clicked_buttonChooseEntryFile)
 
         #---- Placement --------------------------
         self.frameFileSelection.pack(side=TOP, pady=10)
