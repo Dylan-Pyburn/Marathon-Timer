@@ -49,7 +49,7 @@ TODO
 
 WINDOW_TITLE    = 'マラソン タイマー'
 WINDOW_WIDTH    = 700
-WINDOW_HEIGHT   = 500
+WINDOW_HEIGHT   = 700
 
 class App(tk.Tk):
     
@@ -60,7 +60,7 @@ class App(tk.Tk):
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
         #self.config(bg='white')
 
-        self.configure_menubar()
+        #self.configure_menubar()
 
         self.entryFrame         = EntryView(self)
         self.entryModel         = EntryModel()
@@ -76,6 +76,7 @@ class App(tk.Tk):
 
 
 
+    '''
     def configure_menubar(self):
         self.menubar = tk.Menu(self)
         self.config(menu=self.menubar)
@@ -109,3 +110,4 @@ class App(tk.Tk):
 
         self.menuHelp.add_command(label='使い方',           command=None)
         self.menuHelp.add_command(label='Docs',             command=None)
+    '''

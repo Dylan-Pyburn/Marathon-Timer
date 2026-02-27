@@ -9,81 +9,111 @@ class EntryView(Frame):
         self.config(bg='skyblue')
 
         self.configure_vars()
-        self.configure_frameDataEntry()
-        self.configure_frameDataView()
+        self.configure_frames()
 
-        #parent.bind('<Return>', self.pressed_enter)
-        #self.bind('<Return>', self.pressed_enter)
+    def set_controller(self, controller):
+        self.controller = controller
+
 
     def configure_vars(self):
         self.var_studentClass   = StringVar(self)
         self.var_studentNumber  = StringVar(self)
         self.var_studentRank    = StringVar(self)
+        self.var_dataViewRadio  = StringVar(self, 'meibo')
     
+    def configure_frames(self):
+        self.configure_frameFileSelection()
+        self.configure_frameDataEntry()
+        self.configure_frameSaveEntries()
+        self.configure_frameDataView()
 
-    def set_controller(self, controller):
-        self.controller = controller
     
     #=============================================
     #      UI Elements
     #=============================================
 
-    #== Data Entry =============================== 
+    def configure_frameFileSelection(self):
+        self.frameFileSelection     = Frame(self, bg="white")
+
+        self.labelMeiboPath         = Label(self.frameFileSelection, text='名簿を選択してください')
+        self.labelEntryPath         = Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
+
+        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿', command=None)
+        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果', command=None)
+
+        #---- Placement --------------------------
+        self.frameFileSelection.pack(side=TOP, pady=10)
+
+        self.labelMeiboPath.grid(           row=0, column=0, padx=10, pady=10)
+        self.labelEntryPath.grid(           row=1, column=0, padx=10, pady=10)
+        self.buttonChooseMeiboFile.grid(    row=0, column=1, padx=10, pady=10)
+        self.buttonChooseEntryFile.grid(    row=1, column=1, padx=10, pady=10)
+
 
     def configure_frameDataEntry(self):
-        self.frameDataEntry = Frame(self, width=500, height=150,bg="white")
+        self.frameDataEntry = Frame(self, width=500, height=150, bg="white")
 
         self.labelStudentClass      = Label(self.frameDataEntry, text='組')
-        self.entryStudentClass      = Entry(self.frameDataEntry, textvariable=self.var_studentClass)
-
         self.labelStudentNumber     = Label(self.frameDataEntry, text='出席番号')
-        self.entryStudentNumber     = Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
-        
         self.labelStudentRank       = Label(self.frameDataEntry, text='順位')
+
+        self.entryStudentClass      = Entry(self.frameDataEntry, textvariable=self.var_studentClass)
+        self.entryStudentNumber     = Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
         self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
 
-        self.buttonSaveEntries      = Button(self.frameDataEntry, text='保存',  command=self.clicked_buttonSaveEntries)
-        self.buttonEnterData        = Button(self.frameDataEntry, text='追加',  command=self.clicked_buttonEnterData)
-        self.buttonChooseMeiboFile  = Button(self.frameDataEntry, text='名簿',  command=self.clicked_buttonChooseMeiboFile)      
+        self.buttonEnterData        = Button(self.frameDataEntry, text='追加', command=None)
+        
+        #---- Placement --------------------------
+        self.frameDataEntry.pack(side='top', anchor="center", pady=10)
 
-        self.labelMessage           = Label(self.frameDataEntry, fg='red')
-
-        self.arrange_frameDataEntry()
-
-    #== Data View ================================
-
-    def arrange_frameDataEntry(self):
         self.labelStudentClass.grid(        row=0,  column=0,   padx=10,    pady=10)
-        self.entryStudentClass.grid(        row=1,  column=0,   padx=10,    pady=10)
-
         self.labelStudentNumber.grid(       row=0,  column=1,   padx=10,    pady=10)
-        self.entryStudentNumber.grid(       row=1,  column=1,   padx=10,    pady=10)
-
         self.labelStudentRank.grid(         row=0,  column=2,   padx=10,    pady=10)
+        
+        self.entryStudentClass.grid(        row=1,  column=0,   padx=10,    pady=10)
+        self.entryStudentNumber.grid(       row=1,  column=1,   padx=10,    pady=10)
         self.entryStudentRank.grid(         row=1,  column=2,   padx=10,    pady=10)
-
-        self.buttonSaveEntries.grid(        row=0,  column=3,   padx=20,    pady=10)
         self.buttonEnterData.grid(          row=1,  column=3,   padx=20,    pady=10)
-        self.buttonChooseMeiboFile.grid(    row=2,  column=3,   padx=10,    pady=10)
 
-        self.labelMessage.grid(         row=2,  column=0,   padx=10,    pady=10)
+    
+    def configure_frameSaveEntries(self):
+        self.frameSaveEntries       = Frame(self, bg='white')
+        
+        self.labelMessage           = Label(self.frameSaveEntries)
+        self.buttonSaveEntries      = Button(self.frameSaveEntries, text='保存')
 
-        self.frameDataEntry.pack(side='top', anchor="center", pady= 20)
+        #---- Placement --------------------------
+        self.frameSaveEntries.pack(side=TOP, padx=10, pady=10)
 
-    #== Data View ================================ 
+        self.labelMessage.pack(side=LEFT, padx=10, pady=10)
+        self.buttonSaveEntries.pack(side=RIGHT, padx=10, pady=10)
+
 
     def configure_frameDataView(self):
-        self.frameDataView = Frame(self, width=500, height=100, bg="white")
-        self.frameDataView.pack(side='top', anchor='center', pady=20)
+        self.frameDataView           = Frame(self, bg='white')
 
-        self.listboxDataView = Listbox(self.frameDataView, selectmode=SINGLE)
-        self.scrollbarDataView = Scrollbar(self.frameDataView, command=self.listboxDataView.yview)
-        
-        self.scrollbarDataView.pack(side=RIGHT, fill='y')
-        self.listboxDataView.pack(side=LEFT, fill=BOTH)
+        self.frameDataViewRadios     = Frame(self.frameDataView)
+        self.radiobuttonMeibo        = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', variable=self.var_dataViewRadio)
+        self.radiobuttonEntries      = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', variable=self.var_dataViewRadio)
+
+        self.frameDataViewDisplay    =  Frame(self)
+        self.listboxDataView         = Listbox(self.frameDataViewDisplay, selectmode=SINGLE)
+        self.scrollbarDataView       = Scrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
 
+        #---- Placement --------------------------
+        self.frameDataView.pack(side=TOP, pady=10)
+        self.frameDataViewRadios.pack(side=TOP)
+        self.frameDataViewDisplay.pack(side=TOP)
+        
+        self.radiobuttonMeibo.pack(side=LEFT, padx=10, pady=10)
+        self.radiobuttonEntries.pack(side=RIGHT, padx=10, pady=10)
+
+        self.scrollbarDataView.pack(side=RIGHT, fill='y')
+        self.listboxDataView.pack(side=LEFT, fill=BOTH)
+
+   
     #=============================================
     #      Commands
     #=============================================

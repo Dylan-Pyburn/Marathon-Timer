@@ -51,6 +51,12 @@ class EntryController:
         
         success = self.model.load_meibo()
 
+    def _show_msg_labelMessage(self):
+        pass
+
+    def _show_error_label_message(self):
+        pass
+
     def _reset_labelMessage(self):
         self.view.labelMessage.config(text='')
 
