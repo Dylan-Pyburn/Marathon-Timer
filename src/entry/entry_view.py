@@ -37,8 +37,8 @@ class EntryView(Frame):
         self.labelMeiboPath         = Label(self.frameFileSelection, text='名簿を選択してください')
         self.labelEntryPath         = Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
 
-        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿', command=self.clicked_buttonChooseMeiboFile)
-        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果', command=self.clicked_buttonChooseEntryFile)
+        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿ファイル', command=self.clicked_buttonChooseMeiboFile)
+        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果ファイル', command=self.clicked_buttonChooseEntryFile)
 
         #---- Placement --------------------------
         self.frameFileSelection.pack(side=TOP, pady=10)
