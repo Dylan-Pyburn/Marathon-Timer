@@ -95,7 +95,7 @@ class EntryModel:
 
     def meibo_lookup(self, studentClass:str, studentNumber:str) -> dict:
         '''
-        組と出席番号を使い、ある生徒の苗字、名前、性別を調べる
+        組と出席番号を使い、ある生徒の苗字、名前、性別を名簿から調べる
 
         Params:
             (str) studentClass  :  組
@@ -109,11 +109,27 @@ class EntryModel:
         except KeyError:
             return None
 
+    def entry_lookup(self, studentClass, studentNumber) -> dict:
+        '''
+        組と出席番号を使い、ある生徒の有無を入力した生徒たちから調べる
+
+        Params:
+            (str) studentClass  :  組
+            (str) studentNumber :  出席番号
+        Return:
+            ある: dict{順位, 組, 番号, 性別,苗字, 名前}
+            ない: None
+        '''
+        for entry in self.entry_data:
+            if entry['組'] == studentClass and entry['番号'] == studentNumber:
+                return entry
+        return None
+
     def add_entry(self, studentClass, studentNumber, studentRank):
         studentInfo = self.meibo_lookup(studentClass, studentNumber)
-
         if studentInfo == None:
-            return None
+            return 
+
 
         studentFamilyName   = studentInfo['苗字']
         studentFirstName    = studentInfo['名前']
@@ -172,19 +188,28 @@ class EntryModel:
 
     def check_entry_data(self, studentClass, studentNumber, studentRank) -> str:
         messages = [
-            self._check_studentClass(studentClass),
-            self._check_studentNumber(studentNumber),
-            self._check_studentRank(studentRank)
+            self._check_format_studentClass(studentClass),
+            self._check_format_studentNumber(studentNumber),
+            self._check_format_studentRank(studentRank)
         ]
         for msg in messages:
             if msg != '':
                 return msg
 
-        # must be checked after because can only be checked with valid data
+        # check to see if student is in meibo
+        #---- must be checked after the above data is verified
         msg = self._check_student(studentClass, studentNumber)
         if msg != '':
             return msg
-        
+
+        # using this student's rank and gener,
+        # check to see if this (gender, rank) combination has been enetered
+        #---- must be checked after checking this student exists
+        student = self.meibo_lookup(studentClass, studentNumber)
+        msg = self._check_gender_rank(student['性別'], studentRank)
+        if msg != '':
+            return msg
+
         return ''
 
     def _check_student(self, studentClass, studentNumber):
@@ -193,14 +218,20 @@ class EntryModel:
             return f'「{studentClass} #{studentNumber}」は名簿には入っていないです'
 
         # check if the student has already been entered
-        for entry in self.entry_data:
-            if entry['組'] == studentClass and entry['番号'] == studentNumber:
-                return f'{studentClass} #{studentNumber}」は既に入れらました'
+        if self.entry_lookup(studentClass, studentNumber):
+            return f'{studentClass} #{studentNumber}は既に入力されました'
         
         return ''
 
+    def _check_gender_rank(self, studentGender, studentRank):
+        for entry in self.entry_data:
+            if entry['性別'] == studentGender and entry['順位'] == studentRank:
+                return f'順位が {studentRank} 番の{studentGender}の生徒は既に入力されました'
+            
+        return ''
 
-    def _check_studentClass(self, studentClass) -> str:
+
+    def _check_format_studentClass(self, studentClass) -> str:
         if studentClass == '':
             return f'組を入れてください'
     
@@ -210,7 +241,7 @@ class EntryModel:
         return ''
 
    
-    def _check_studentNumber(self, studentNumber) -> str:
+    def _check_format_studentNumber(self, studentNumber) -> str:
         if studentNumber == '':
             return f'出席番号を入れてください'
         
@@ -226,7 +257,7 @@ class EntryModel:
         return ''
        
 
-    def _check_studentRank(self, studentRank) -> str:
+    def _check_format_studentRank(self, studentRank) -> str:
         if studentRank == '':
             return f'順位を入れてください'
         

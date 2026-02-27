@@ -13,25 +13,17 @@ TODO
             class combobox
             number combobox
         combobox autocomplete
-        lbDataView
-            edit an entry (repeat data validation)
-
-    TODO
     
     entry file
-    open file:
-        choose file dialog to open
-    save entries:
-        if file loaded:
-            overwrite it
-        if not file loaded
-            save as
+    open file: for editing
+        but how to verify that an okay meibo?
+            must choose a meibo if not chosen already
+            then all entries must pass  meibo_lookup
 
     check that a loaded entry file has a correct meibo
     
     data entry
         edit an entry from the listbox
-        make sure each rank is only entered once for each gender
         display entries in forward or reverse order or sorted (have buttons that are only visible on entry mode)
         can edit listbox lines, but only for entry mode
         can delete listbox lines, but only for entry mode
@@ -39,9 +31,6 @@ TODO
         loading
             load entries file
         
-        saving
-            choose path if not chosen already
-
 
     styling
         make it look purdy

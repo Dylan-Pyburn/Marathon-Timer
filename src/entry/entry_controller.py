@@ -84,12 +84,13 @@ class EntryController:
         
         if errorMessage != '':
             self._show_label_error(label, errorMessage)
+            return
            
-        else:
-            self.model.add_entry(studentClass, studentNumber, studentRank)
+        
+        self.model.add_entry(studentClass, studentNumber, studentRank)
 
-            self._update_listboxDataView(mode='entry')
-            self._reset_entryvars()
+        self._update_listboxDataView(mode='entry')
+        self._reset_entryvars()
 
 
     def save_entries(self):
