@@ -11,10 +11,16 @@ class EntryModel:
         self.meibo_path     = ''
         self.entries_path   = ''
         
-        self.meibo_data = defaultdict(dict)
-        self.entry_data = []
+        self.meibo_rows     = []                    # the raw lines as read in from the csv
+        self.meibo_data     = defaultdict(dict)     # parsed csv data
+        
+        self.entry_rows     = []
+        self.entry_data     = []
 
-        self.meibo_classes = []
+        self.meibo_classes  = []
+
+        self.set_meibo_path('meibo.csv')
+        self.load_meibo()
     
     #=============================================
     #      File Operations
@@ -29,30 +35,38 @@ class EntryModel:
     def load_meibo(self) -> str:
         # read meibo file
         try:
-            rows = []
+            # just get the raw lines for display in the listbox
+            meibo_rows = []
+            with open(self.meibo_path, mode='r', encoding='utf-8') as file:
+                for row in file.readlines():
+                    meibo_rows.append(row.rstrip())
+
+            # get the actual cav data for parsing and use        
+            csv_rows   = []
             with open(self.meibo_path, mode='r', encoding='utf-8') as csv_file:
                 csv_reader = csv.DictReader(csv_file)
                 fieldnames = csv_reader.fieldnames
                 for row in csv_reader:
-                    rows.append(row)
+                    csv_rows.append(row)
         except:
             return f'error while opening{self.meibo_path}'
 
         # check the meibo data
-        msg = self.check_meibo_file_format(fieldnames, rows)
+        msg = self.check_meibo_file_format(fieldnames, csv_rows)
         if msg != '':
             return msg
 
         # everything looks good, parse the data
-        meibo_data = defaultdict(dict)
-        for row in rows:
+        self.meibo_rows     = meibo_rows
+        self.meibo_data     = defaultdict(dict)
+        for row in csv_rows:
             self.meibo_data[row['組']][row['番号']] = {
                 '苗字': row['苗字'],
                 '名前': row['名前'],
                 '性別': row['性別']
             }
         self.meibo_classes  = [k for k in self.meibo_data.keys()]
-        self.meibo_data     = meibo_data
+        
 
         return ''
 
@@ -105,7 +119,7 @@ class EntryModel:
         studentFamilyName   = studentInfo['苗字']
         studentFirstName    = studentInfo['名前']
         studentGender       = studentInfo['性別']
-
+        
         newEntry = {
             '順位'  : studentRank,
             '組'    : studentClass,
@@ -114,18 +128,26 @@ class EntryModel:
             '苗字'  : studentFamilyName,
             '名前'  : studentFirstName
         }
+        newEntryStr = '  '.join([v for v in newEntry.values()])
 
+        self.entry_rows.append(newEntryStr)
         self.entry_data.append(newEntry)
-        return newEntry
+        return newEntryStr
 
     def get_entry_str(self, entry:dict) -> str:
         return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
 
-    def get_student_classes(self):
-        return self.meibo_classes
+    def get_meibo_data(self) -> dict:
+        return self.meibo_data
 
-    def get_numbers(self, studentClass):
-        pass
+    def get_meibo_rows(self) -> list:
+        return self.meibo_rows
+    
+    def get_entry_rows(self) -> list:
+        return self.entry_rows
+    
+    def get_meibo_classes(self):
+        return self.meibo_classes
 
     #=============================================
     #      Data Validataion

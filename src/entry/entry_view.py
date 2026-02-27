@@ -37,8 +37,8 @@ class EntryView(Frame):
         self.labelMeiboPath         = Label(self.frameFileSelection, text='名簿を選択してください')
         self.labelEntryPath         = Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
 
-        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿ファイル', command=self.clicked_buttonChooseMeiboFile)
-        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果ファイル', command=self.clicked_buttonChooseEntryFile)
+        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿の読み込み', command=self.clicked_buttonChooseMeiboFile)
+        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果の読み込み', command=self.clicked_buttonChooseEntryFile)
 
         #---- Placement --------------------------
         self.frameFileSelection.pack(side=TOP, pady=10)
@@ -98,7 +98,7 @@ class EntryView(Frame):
                                                         variable=self.var_dataViewRadio, command=self.clicked_radiobutton)
 
         self.frameDataViewDisplay    =  Frame(self)
-        self.listboxDataView         = Listbox(self.frameDataViewDisplay, selectmode=SINGLE)
+        self.listboxDataView         = Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=SINGLE)
         self.scrollbarDataView       = Scrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)

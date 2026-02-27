@@ -40,10 +40,13 @@ class EntryController:
         msg = self.model.load_meibo()        
 
         if msg == '':
+            self.view.var_dataViewRadio.set('meibo')
+            self._update_listboxDataView()
             self._show_label_message(label, path)
-            '''TODO: show meibo in listbox if radio is configured'''
+            
         else:
             self._show_label_error(label, msg)
+
 
 
     def choose_entry_file(self):
@@ -54,7 +57,8 @@ class EntryController:
 
 
     def add_entry(self):
-        self._reset_labelMessage()
+        label = self.view.labelMessage
+        self._reset_label(label)
         
         studentClass    = self.view.var_studentClass.get().strip().upper()
         studentNumber   = self.view.var_studentNumber.get().strip().upper()
@@ -63,19 +67,23 @@ class EntryController:
         errorMessage    = self.model.check_entry_data(studentClass, studentNumber, studentRank)
         
         if errorMessage != '':
-            self.view.labelMessage.config(text=errorMessage)
+            self._show_label_error(label, errorMessage)
            
         else:
-            newEntry    = self.model.add_entry(studentClass, studentNumber, studentRank)
-            entryText   = f'{newEntry['性別']}{newEntry['順位']}  {newEntry['組']}  #{newEntry['番号']}  {newEntry['苗字']} {newEntry['名前']}'
-            self.view.listboxDataView.insert('1', entryText)
-            self._reset_entry_vars()
+            self.model.add_entry(studentClass, studentNumber, studentRank)
+
+            self.view.var_dataViewRadio.set('entry')
+            self._update_listboxDataView()
+            self._reset_entryvars()
 
 
     def save_entries(self):
         #TODO get path to save if not set?
 
         self.model.save_entries()
+
+    def handle_display_radio(self):
+        self._update_listboxDataView()
 
     #=============================================
     #      Dialogs, UI Updates
@@ -105,3 +113,26 @@ class EntryController:
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')
 
+    def _update_listboxDataView(self):
+        mode = self.view.var_dataViewRadio.get()
+
+        if mode == 'meibo':
+            self._show_listbox_meibo()
+        elif mode == 'entry':
+            self._show_listbox_entries()
+        
+    def _show_listbox_meibo(self):
+        self.view.listboxDataView.delete(0, 'end')
+        
+        data = self.model.get_meibo_rows()
+        for line in data:
+            self.view.listboxDataView.insert('end', line)
+
+    def _show_listbox_entries(self):
+        self.view.listboxDataView.delete(0, 'end')
+
+        data = self.model.get_entry_rows()
+        for line in reversed(data):
+            self.view.listboxDataView.insert('end', line)
+
+    

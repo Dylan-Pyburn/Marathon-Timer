@@ -29,6 +29,8 @@ TODO
         load entries into listbox
     data entry
         edit an entry from the listbox
+        make sure each rank is only entered once for each gender
+        display entries in forward or reverse order or sorted (have buttons that are only visible on entry mode)
     styling
         make it look purdy
         auto hide/show scrollbar
