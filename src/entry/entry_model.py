@@ -11,15 +11,15 @@ class EntryModel:
         self.meibo_path     = ''
         self.entries_path   = ''
         
-        self.meibo_rows     = []                    # the raw lines as read in from the csv
-        self.meibo_data     = defaultdict(dict)     # parsed csv data
+        self.meibo_rows     = [] # the raw lines as read in from the csv
+        self.meibo_data     = {} # parsed csv data
         
         self.entry_rows     = []
         self.entry_data     = []
 
         self.meibo_classes  = []
 
-        self.set_meibo_path('meibo.csv')
+        self.set_meibo_path('sample_files/meibo.csv')
         self.load_meibo()
     
     #=============================================

@@ -17,6 +17,16 @@ TODO
             edit an entry (repeat data validation)
 
     TODO
+    
+    entry file
+    open file:
+        choose file dialog to open
+    save entries:
+        if file loaded:
+            overwrite it
+        if not file loaded
+            save as
+    
     data entry
         edit an entry from the listbox
         make sure each rank is only entered once for each gender
