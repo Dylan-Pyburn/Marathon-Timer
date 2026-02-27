@@ -10,31 +10,11 @@ class EntryController:
         self.view   = view
         self.model  = model
 
-    def clicked_add_entry(self):
-        self._reset_labelMessage()
-        
-        studentClass    = self.view.var_studentClass.get().strip().upper()
-        studentNumber   = self.view.var_studentNumber.get().strip().upper()
-        studentRank     = self.view.var_studentRank.get().strip().upper()
-        
-        errorMessage    = self.model.check_entry_data(studentClass, studentNumber, studentRank)
-        
-        if errorMessage != '':
-            self.view.labelMessage.config(text=errorMessage)
-           
-        else:
-            newEntry    = self.model.add_entry(studentClass, studentNumber, studentRank)
-            entryText   = f'{newEntry['性別']}{newEntry['順位']}  {newEntry['組']}  #{newEntry['番号']}  {newEntry['苗字']} {newEntry['名前']}'
-            self.view.listboxDataView.insert('1', entryText)
-            self._reset_vars()
+    #=============================================
+    #      Handle Commands
+    #=============================================
 
-    def clicked_save_entries(self):
-        #TODO get path to save if not set?
-
-        self.model.save_entries()
-
-    
-    def clicked_choose_meibo_file(self):
+    def choose_meibo_file(self):
         filetypes = (('CSV ファイル', '*.csv'), ('全部', '*.*'))
         path = fd.askopenfilename(
             title       ='名簿ファイルを選択してください',
@@ -50,7 +30,41 @@ class EntryController:
         self.model.set_meibo_path(path)
         
         success = self.model.load_meibo()
+        return success
 
+
+    def choose_entry_file(self):
+        pass
+
+
+    def add_entry(self):
+        self._reset_labelMessage()
+        
+        studentClass    = self.view.var_studentClass.get().strip().upper()
+        studentNumber   = self.view.var_studentNumber.get().strip().upper()
+        studentRank     = self.view.var_studentRank.get().strip().upper()
+        
+        errorMessage    = self.model.check_entry_data(studentClass, studentNumber, studentRank)
+        
+        if errorMessage != '':
+            self.view.labelMessage.config(text=errorMessage)
+           
+        else:
+            newEntry    = self.model.add_entry(studentClass, studentNumber, studentRank)
+            entryText   = f'{newEntry['性別']}{newEntry['順位']}  {newEntry['組']}  #{newEntry['番号']}  {newEntry['苗字']} {newEntry['名前']}'
+            self.view.listboxDataView.insert('1', entryText)
+            self._reset_entry_vars()
+
+
+    def save_entries(self):
+        #TODO get path to save if not set?
+
+        self.model.save_entries()
+
+    #=============================================
+    #      Update UI
+    #=============================================
+    
     def _show_msg_labelMessage(self):
         pass
 
@@ -60,7 +74,7 @@ class EntryController:
     def _reset_labelMessage(self):
         self.view.labelMessage.config(text='')
 
-    def _reset_vars(self):
+    def _reset_entry_vars(self):
         self.view.var_studentClass.set('')
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')

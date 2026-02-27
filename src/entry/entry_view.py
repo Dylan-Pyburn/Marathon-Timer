@@ -26,7 +26,6 @@ class EntryView(Frame):
         self.configure_frameDataEntry()
         self.configure_frameSaveEntries()
         self.configure_frameDataView()
-
     
     #=============================================
     #      UI Elements
@@ -38,8 +37,8 @@ class EntryView(Frame):
         self.labelMeiboPath         = Label(self.frameFileSelection, text='名簿を選択してください')
         self.labelEntryPath         = Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
 
-        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿', command=None)
-        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果', command=None)
+        self.buttonChooseMeiboFile  = Button(self.frameFileSelection, text='名簿', command=self.clicked_buttonChooseMeiboFile)
+        self.buttonChooseEntryFile  = Button(self.frameFileSelection, text='結果', command=self.clicked_buttonChooseEntryFile)
 
         #---- Placement --------------------------
         self.frameFileSelection.pack(side=TOP, pady=10)
@@ -61,7 +60,7 @@ class EntryView(Frame):
         self.entryStudentNumber     = Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
         self.entryStudentRank       = Entry(self.frameDataEntry, textvariable=self.var_studentRank)
 
-        self.buttonEnterData        = Button(self.frameDataEntry, text='追加', command=None)
+        self.buttonEnterData        = Button(self.frameDataEntry, text='追加', command=self.clicked_buttonEnterData)
         
         #---- Placement --------------------------
         self.frameDataEntry.pack(side='top', anchor="center", pady=10)
@@ -80,7 +79,7 @@ class EntryView(Frame):
         self.frameSaveEntries       = Frame(self, bg='white')
         
         self.labelMessage           = Label(self.frameSaveEntries)
-        self.buttonSaveEntries      = Button(self.frameSaveEntries, text='保存')
+        self.buttonSaveEntries      = Button(self.frameSaveEntries, text='保存', command=self.clicked_buttonSaveEntries)
 
         #---- Placement --------------------------
         self.frameSaveEntries.pack(side=TOP, padx=10, pady=10)
@@ -93,8 +92,10 @@ class EntryView(Frame):
         self.frameDataView           = Frame(self, bg='white')
 
         self.frameDataViewRadios     = Frame(self.frameDataView)
-        self.radiobuttonMeibo        = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', variable=self.var_dataViewRadio)
-        self.radiobuttonEntries      = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', variable=self.var_dataViewRadio)
+        self.radiobuttonMeibo        = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', 
+                                                        variable=self.var_dataViewRadio, command=self.clicked_radiobutton)
+        self.radiobuttonEntries      = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', 
+                                                        variable=self.var_dataViewRadio, command=self.clicked_radiobutton)
 
         self.frameDataViewDisplay    =  Frame(self)
         self.listboxDataView         = Listbox(self.frameDataViewDisplay, selectmode=SINGLE)
@@ -118,22 +119,32 @@ class EntryView(Frame):
     #      Commands
     #=============================================
 
-    def pressed_enter(self, event):
-        print("enter pressed")
+    def clicked_buttonChooseMeiboFile(self):
         if self.controller:
-            self.controller.clicked_add_entry()
+            self.controller.choose_meibo_file()
+
+    def clicked_buttonChooseEntryFile(self):
+        if self.controller:
+            self.controller.choose_entry_file()
 
     def clicked_buttonEnterData(self):
         if self.controller:
-            self.controller.clicked_add_entry()
+            self.controller.add_entry()
 
     def clicked_buttonSaveEntries(self):
         if self.controller:
-            self.controller.clicked_save_entries()
+            self.controller.save_entries()
 
-    def clicked_buttonChooseMeiboFile(self):
+    def clicked_radiobutton(self):
         if self.controller:
-            self.controller.clicked_choose_meibo_file()
+            self.controller.handle_display_radio()
 
     def clicked_listBoxData(self):
         pass
+
+    #==== Key Presses ============================
+
+    def pressed_enter(self, event):
+        print("enter pressed")
+        if self.controller:
+            self.controller.add_entry()
