@@ -158,7 +158,11 @@ class EntryModel:
     def get_meibo_rows(self) -> list:
         return self.meibo_rows
     
-    def get_entry_rows(self, sortmode='newest') -> list:
+    def get_entry_rows(self,sortmode='newest'):
+        data = self.get_entries(sortmode)
+        return [EntryModel.get_entry_str(entry) for entry in data]
+
+    def get_entries(self, sortmode='newest') -> list:
         data = self.entry_data
         
         # reversed to show the end of the list first

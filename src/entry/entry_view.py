@@ -23,8 +23,8 @@ class EntryView(Frame):
         self.var_studentRank    = StringVar(self)
         self.var_radioDataView  = StringVar(self, 'meibo')
         self.var_radioDataSort  = StringVar(self, 'newest')
-        self.var_checkboxMale   = BooleanVar(self, True)
-        self.var_checkboxFemale = BooleanVar(self, True)
+        self.var_checkboxMale   = BooleanVar(self, value=True)
+        self.var_checkboxFemale = BooleanVar(self, value=True)
     
     def configure_frames(self):
         self.configure_frameFileSelection()
@@ -123,9 +123,9 @@ class EntryView(Frame):
     def configure_frameDataViewControls(self):
         self.frameDataViewControls  = Frame(self.frameDataView)
 
-        self.checkButtonMale        = Checkbutton(self.frameDataViewControls, text='男性', command=self.clicked_checkbutton_sort,
+        self.checkButtonMale        = Checkbutton(self.frameDataViewControls, text='男子', command=self.clicked_checkbutton_sort,
                                                         variable=self.var_checkboxMale, onvalue=True, offvalue=False)
-        self.checkButtonFemale      = Checkbutton(self.frameDataViewControls, text='女性', command=self.clicked_checkbutton_sort,
+        self.checkButtonFemale      = Checkbutton(self.frameDataViewControls, text='女子', command=self.clicked_checkbutton_sort,
                                                         variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
         separator                   = ttk.Separator(self.frameDataViewControls, orient=HORIZONTAL)
         self.radioNewest            = Radiobutton(self.frameDataViewControls, text='最新', value='newest',

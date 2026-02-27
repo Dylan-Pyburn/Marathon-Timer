@@ -40,6 +40,8 @@ TODO
 
     make displayed file loacation clickable?
         
+    ask to save on program exit
+
     add tabs
 
     timer
@@ -57,9 +59,7 @@ class App(tk.Tk):
 
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
-        #self.config(bg='white')
-
-        #self.configure_menubar()
+        
 
         self.entryFrame         = EntryView(self)
         self.entryModel         = EntryModel()

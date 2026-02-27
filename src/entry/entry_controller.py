@@ -124,13 +124,56 @@ class EntryController:
             return
         self._update_listboxDataView()
 
-
     def handle_checkbutton_sort(self):
-        pass
+        if self.view.var_radioDataView.get() != 'entry':
+            return
+        self._update_listboxDataView()
 
     #=============================================
     #      Dialogs, UI Updates
     #=============================================
+
+    def _update_listboxDataView(self, viewmode:str='', sortmode=''):
+        # set a new viewmode if provided otherwise use the current one
+        if viewmode in RADIO_VIEW_MODES:
+            self.view.var_radioDataView.set(viewmode)
+        else:
+            viewmode = self.view.var_radioDataView.get()
+
+        # set a new sortmode if provided otherwise use the current one
+        if sortmode in RADIO_SORT_MODES:
+            self.view.var_radioDataSort.set(sortmode)
+        else:
+            sortmode = self.view.var_radioDataSort.get()
+
+        if viewmode == 'meibo':
+            self._show_listbox_meibo()
+        elif viewmode == 'entry':
+            self._show_listbox_entries()
+        
+    def _show_listbox_meibo(self):
+        self.view.listboxDataView.delete(0, 'end')
+        
+        data = self.model.get_meibo_rows()
+        for line in data:
+            self.view.listboxDataView.insert('end', line)
+
+    def _show_listbox_entries(self):
+        self.view.listboxDataView.delete(0, 'end')
+        
+        sortmode    = self.view.var_radioDataSort.get()
+        data        = self.model.get_entries(sortmode)
+
+        # only show selected genders
+        selectedGenders = []
+        if self.view.var_checkboxMale.get():    selectedGenders.append('男子')
+        if self.view.var_checkboxFemale.get():  selectedGenders.append('女子')
+
+        # filter out unselected genders
+        data = [line for line in data if line['性別'] in selectedGenders]
+        for line in data:
+            entrystr = EntryModel.get_entry_str(line)
+            self.view.listboxDataView.insert('end', entrystr)
 
     def _open_file_dialog(self, title:str, initialdir:str='.') -> str:     
         path = fd.askopenfilename(
@@ -162,39 +205,5 @@ class EntryController:
         self.view.var_studentClass.set('')
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')
-
-    def _update_listboxDataView(self, viewmode:str='', sortmode=''):
-        # set a new viewmode if provided otherwise use the current one
-        if viewmode in RADIO_VIEW_MODES:
-            self.view.var_radioDataView.set(viewmode)
-        else:
-            viewmode = self.view.var_radioDataView.get()
-
-        # set a new sortmode if provided otherwise use the current one
-        if sortmode in RADIO_SORT_MODES:
-            self.view.var_radioDataSort.set(sortmode)
-        else:
-            sortmode = self.view.var_radioDataSort.get()
-
-        if viewmode == 'meibo':
-            self._show_listbox_meibo()
-        elif viewmode == 'entry':
-            self._show_listbox_entries()
-        
-    def _show_listbox_meibo(self):
-        self.view.listboxDataView.delete(0, 'end')
-        
-        data = self.model.get_meibo_rows()
-        for line in data:
-            self.view.listboxDataView.insert('end', line)
-
-    def _show_listbox_entries(self):
-        self.view.listboxDataView.delete(0, 'end')
-        
-        sortmode    = self.view.var_radioDataSort.get()
-        data        = self.model.get_entry_rows(sortmode)
-        for line in data:
-            entrystr = EntryModel.get_entry_str(line)
-            self.view.listboxDataView.insert('end', entrystr)
 
     
