@@ -132,9 +132,9 @@ class EntryView(Frame):
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         self.radioOldest            = Radiobutton(self.frameDataViewControls, text='最古', value='oldest',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioSorted            = Radiobutton(self.frameDataViewControls, text='sorted', value='sorted',
+        self.radioOrderMale         = Radiobutton(self.frameDataViewControls, text='順位：男性', value='sortedMale',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioSortedRev         = Radiobutton(self.frameDataViewControls, text='sorted (reverse)', value='sortedrev',
+        self.radioOrderFemale       = Radiobutton(self.frameDataViewControls, text='順位：女性', value='sortedFemale',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         
         #---- Placement --------------------------
@@ -145,8 +145,8 @@ class EntryView(Frame):
         separator.pack(side=TOP, pady=5)
         self.radioNewest.pack(side=TOP)
         self.radioOldest.pack(side=TOP)
-        self.radioSorted.pack(side=TOP)
-        self.radioSortedRev.pack(side=TOP)
+        self.radioOrderMale.pack(side=TOP)
+        self.radioOrderFemale.pack(side=TOP)
 
    
     #=============================================
@@ -187,6 +187,6 @@ class EntryView(Frame):
     #==== Key Presses ============================
 
     def pressed_enter(self, event):
-        print("enter pressed")
         if self.controller:
             self.controller.add_entry()
+            

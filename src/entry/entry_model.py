@@ -130,7 +130,6 @@ class EntryModel:
         if studentInfo == None:
             return 
 
-
         studentFamilyName   = studentInfo['苗字']
         studentFirstName    = studentInfo['名前']
         studentGender       = studentInfo['性別']
@@ -149,7 +148,8 @@ class EntryModel:
         self.entry_data.append(newEntry)
         return newEntryStr
 
-    def get_entry_str(self, entry:dict) -> str:
+    @staticmethod
+    def get_entry_str(entry:dict) -> str:
         return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
 
     def get_meibo_data(self) -> dict:
@@ -158,7 +158,30 @@ class EntryModel:
     def get_meibo_rows(self) -> list:
         return self.meibo_rows
     
-    def get_entry_rows(self) -> list:
+    def get_entry_rows(self, sortmode='newest') -> list:
+        data = self.entry_data
+        
+        # reversed to show the end of the list first
+        if sortmode == 'newest':
+            return reversed(data)
+        
+        # not reversed because we'll desplay in the same order added
+        elif sortmode == 'oldest':
+            return data
+
+        # sort by rank, then by gender (reversed so males come first)
+        # Did nested sorted() because I'm too lazy to deepcopy data
+        elif sortmode == 'sortedMale':
+            return sorted(sorted(data, key=lambda x: x['順位']), 
+                            key=lambda x: x['性別'], reverse=True)
+
+        # sort by rank, then by gender (females will come first)
+        # Again did nested sorted() because I'm too lazy to deepcopy data
+        elif sortmode == 'sortedFemale':
+            return sorted(sorted(data, key=lambda x: x['順位']), 
+                            key=lambda x: x['性別'])
+
+        # just in case?
         return self.entry_rows
     
     def get_entry_data(self) -> list:

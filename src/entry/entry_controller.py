@@ -1,7 +1,10 @@
 import  tkinter as      tk
 from    tkinter import  filedialog as fd
 
+from src.entry.entry_model import EntryModel
+
 RADIO_VIEW_MODES = ['meibo', 'entry']
+RADIO_SORT_MODES = ['newest', 'oldest', 'sortedMale', 'sortedFemale']
 
 FILETYPES =  [('CSV ファイル', '*.csv')]
 
@@ -43,7 +46,7 @@ class EntryController:
         msg = self.model.load_meibo()        
 
         if msg == '':
-            self._update_listboxDataView(mode='meibo')
+            self._update_listboxDataView(viewmode='meibo')
             self._show_label_message(label, path)
             
         else:
@@ -85,16 +88,17 @@ class EntryController:
         if errorMessage != '':
             self._show_label_error(label, errorMessage)
             return
-           
-        
+    
         self.model.add_entry(studentClass, studentNumber, studentRank)
-
-        self._update_listboxDataView(mode='entry')
+        self._update_listboxDataView(viewmode='entry')
+        
+        # because its nicer for the user:
         self._reset_entryvars()
+        self.view.entryStudentClass.focus_set()
 
 
     def save_entries(self):
-        self._update_listboxDataView(mode='entry')
+        self._update_listboxDataView(viewmode='entry')
         label = self.view.labelMessage
         
         if len(self.model.get_entry_rows()) == 0:
@@ -116,7 +120,10 @@ class EntryController:
         self._update_listboxDataView()
 
     def handle_radio_sort(self):
-        pass
+        if self.view.var_radioDataView.get() != 'entry':
+            return
+        self._update_listboxDataView()
+
 
     def handle_checkbutton_sort(self):
         pass
@@ -156,16 +163,22 @@ class EntryController:
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')
 
-    def _update_listboxDataView(self, mode:str=''):
-        # set a new mode if provided otherwise use the current mode
-        if mode in RADIO_VIEW_MODES:
-            self.view.var_radioDataView.set(mode)
+    def _update_listboxDataView(self, viewmode:str='', sortmode=''):
+        # set a new viewmode if provided otherwise use the current one
+        if viewmode in RADIO_VIEW_MODES:
+            self.view.var_radioDataView.set(viewmode)
         else:
-            mode = self.view.var_radioDataView.get()
+            viewmode = self.view.var_radioDataView.get()
 
-        if mode == 'meibo':
+        # set a new sortmode if provided otherwise use the current one
+        if sortmode in RADIO_SORT_MODES:
+            self.view.var_radioDataSort.set(sortmode)
+        else:
+            sortmode = self.view.var_radioDataSort.get()
+
+        if viewmode == 'meibo':
             self._show_listbox_meibo()
-        elif mode == 'entry':
+        elif viewmode == 'entry':
             self._show_listbox_entries()
         
     def _show_listbox_meibo(self):
@@ -177,9 +190,11 @@ class EntryController:
 
     def _show_listbox_entries(self):
         self.view.listboxDataView.delete(0, 'end')
-
-        data = self.model.get_entry_rows()
-        for line in reversed(data):
-            self.view.listboxDataView.insert('end', line)
+        
+        sortmode    = self.view.var_radioDataSort.get()
+        data        = self.model.get_entry_rows(sortmode)
+        for line in data:
+            entrystr = EntryModel.get_entry_str(line)
+            self.view.listboxDataView.insert('end', entrystr)
 
     
