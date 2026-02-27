@@ -19,7 +19,10 @@ class EntryView(Frame):
         self.var_studentClass   = StringVar(self)
         self.var_studentNumber  = StringVar(self)
         self.var_studentRank    = StringVar(self)
-        self.var_dataViewRadio  = StringVar(self, 'meibo')
+        self.var_radioDataView  = StringVar(self, 'meibo')
+        self.var_radioDataSort  = StringVar(self, 'newest')
+        self.var_checkboxMale   = None
+        self.var_checkboxFemale = None
     
     def configure_frames(self):
         self.configure_frameFileSelection()
@@ -93,9 +96,9 @@ class EntryView(Frame):
 
         self.frameDataViewRadios     = Frame(self.frameDataView)
         self.radiobuttonMeibo        = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', 
-                                                        variable=self.var_dataViewRadio, command=self.clicked_radiobutton)
+                                                        variable=self.var_radioDataView, command=self.clicked_radiobutton)
         self.radiobuttonEntries      = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', 
-                                                        variable=self.var_dataViewRadio, command=self.clicked_radiobutton)
+                                                        variable=self.var_radioDataView, command=self.clicked_radiobutton)
 
         self.frameDataViewDisplay    =  Frame(self)
         self.listboxDataView         = Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=SINGLE)

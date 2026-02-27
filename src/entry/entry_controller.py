@@ -40,7 +40,7 @@ class EntryController:
         msg = self.model.load_meibo()        
 
         if msg == '':
-            self.view.var_dataViewRadio.set('meibo')
+            self.view.var_radioDataView.set('meibo')
             self._update_listboxDataView()
             self._show_label_message(label, path)
             
@@ -72,7 +72,7 @@ class EntryController:
         else:
             self.model.add_entry(studentClass, studentNumber, studentRank)
 
-            self.view.var_dataViewRadio.set('entry')
+            self.view.var_radioDataView.set('entry')
             self._update_listboxDataView()
             self._reset_entryvars()
 
@@ -114,7 +114,7 @@ class EntryController:
         self.view.var_studentRank.set('')
 
     def _update_listboxDataView(self):
-        mode = self.view.var_dataViewRadio.get()
+        mode = self.view.var_radioDataView.get()
 
         if mode == 'meibo':
             self._show_listbox_meibo()

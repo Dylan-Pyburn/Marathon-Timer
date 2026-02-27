@@ -8,41 +8,36 @@ from src.entry.entry_controller import EntryController
 '''
 TODO
     entryview
-        data extry
-            entered items are valid
-                move to model?
-            student can be found in meibo
-            show error label
         read from meibo:
-            error checking to verify format/integrity of csv data
             cant load new meibo once something has been entered(disable button)
             class combobox
             number combobox
         combobox autocomplete
         lbDataView
-            get more data from meibo (gender, name)
-            edit and entry (repeat data validation)
+            edit an entry (repeat data validation)
 
     TODO
-    filedialog
-        add all fire dialog operations
-        load entries into listbox
     data entry
         edit an entry from the listbox
         make sure each rank is only entered once for each gender
         display entries in forward or reverse order or sorted (have buttons that are only visible on entry mode)
+        can edit listbox lines, but only for entry mode
+        can delete listbox lines, but only for entry mode
+
+        loading
+            load entries file
+        
+        saving
+            choose path if not chosen already
+
+
     styling
         make it look purdy
         auto hide/show scrollbar
         autofill entries
         entries combobox
 
-    entry model and controller
-        read from meibo to populate inital value
-        read from meibo to populate name and gender
-        write to csv
     
-    add menu
     add tabs
 
     timer
