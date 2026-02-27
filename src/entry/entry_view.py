@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 
 class EntryView(Frame):
 
@@ -21,14 +22,15 @@ class EntryView(Frame):
         self.var_studentRank    = StringVar(self)
         self.var_radioDataView  = StringVar(self, 'meibo')
         self.var_radioDataSort  = StringVar(self, 'newest')
-        self.var_checkboxMale   = None
-        self.var_checkboxFemale = None
+        self.var_checkboxMale   = BooleanVar(self, True)
+        self.var_checkboxFemale = BooleanVar(self, True)
     
     def configure_frames(self):
         self.configure_frameFileSelection()
         self.configure_frameDataEntry()
         self.configure_frameSaveEntries()
         self.configure_frameDataView()
+        self.configure_frameDataViewControls()
     
     #=============================================
     #      UI Elements
@@ -92,30 +94,58 @@ class EntryView(Frame):
 
 
     def configure_frameDataView(self):
-        self.frameDataView           = Frame(self, bg='white')
+        self.frameDataView          = Frame(self, bg='white')
 
-        self.frameDataViewRadios     = Frame(self.frameDataView)
-        self.radiobuttonMeibo        = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', 
-                                                        variable=self.var_radioDataView, command=self.clicked_radiobutton)
-        self.radiobuttonEntries      = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', 
-                                                        variable=self.var_radioDataView, command=self.clicked_radiobutton)
+        self.frameDataViewRadios    = Frame(self.frameDataView)
+        self.radioMeibo             = Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', 
+                                                        variable=self.var_radioDataView, command=self.clicked_radio_display)
+        self.radioEntries           = Radiobutton(self.frameDataViewRadios, text='結果', value='entry', 
+                                                        variable=self.var_radioDataView, command=self.clicked_radio_display)
 
-        self.frameDataViewDisplay    =  Frame(self)
-        self.listboxDataView         = Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=SINGLE)
-        self.scrollbarDataView       = Scrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
+        self.frameDataViewDisplay   = Frame(self.frameDataView)
+        self.listboxDataView        = Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=SINGLE)
+        self.scrollbarDataView      = Scrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
 
         #---- Placement --------------------------
         self.frameDataView.pack(side=TOP, pady=10)
         self.frameDataViewRadios.pack(side=TOP)
-        self.frameDataViewDisplay.pack(side=TOP)
+        self.frameDataViewDisplay.pack(side=LEFT)
         
-        self.radiobuttonMeibo.pack(side=LEFT, padx=10, pady=10)
-        self.radiobuttonEntries.pack(side=RIGHT, padx=10, pady=10)
+        self.radioMeibo.pack(side=LEFT, padx=10, pady=10)
+        self.radioEntries.pack(side=RIGHT, padx=10, pady=10)
 
         self.scrollbarDataView.pack(side=RIGHT, fill='y')
         self.listboxDataView.pack(side=LEFT, fill=BOTH)
+
+    def configure_frameDataViewControls(self):
+        self.frameDataViewControls  = Frame(self.frameDataView)
+
+        self.checkButtonMale        = Checkbutton(self.frameDataViewControls, text='男性', command=self.clicked_checkbutton_sort,
+                                                        variable=self.var_checkboxMale, onvalue=True, offvalue=False)
+        self.checkButtonFemale      = Checkbutton(self.frameDataViewControls, text='女性', command=self.clicked_checkbutton_sort,
+                                                        variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
+        separator                   = ttk.Separator(self.frameDataViewControls, orient=HORIZONTAL)
+        self.radioNewest            = Radiobutton(self.frameDataViewControls, text='最新', value='newest',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioOldest            = Radiobutton(self.frameDataViewControls, text='最古', value='oldest',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioSorted            = Radiobutton(self.frameDataViewControls, text='sorted', value='sorted',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioSortedRev         = Radiobutton(self.frameDataViewControls, text='sorted (reverse)', value='sortedrev',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        
+        #---- Placement --------------------------
+        self.frameDataViewControls.pack(side=RIGHT)
+
+        self.checkButtonMale.pack(side=TOP)
+        self.checkButtonFemale.pack(side=TOP)
+        separator.pack(side=TOP, pady=5)
+        self.radioNewest.pack(side=TOP)
+        self.radioOldest.pack(side=TOP)
+        self.radioSorted.pack(side=TOP)
+        self.radioSortedRev.pack(side=TOP)
 
    
     #=============================================
@@ -138,9 +168,17 @@ class EntryView(Frame):
         if self.controller:
             self.controller.save_entries()
 
-    def clicked_radiobutton(self):
+    def clicked_radio_display(self):
         if self.controller:
-            self.controller.handle_display_radio()
+            self.controller.handle_radio_display()
+
+    def clicked_radio_sort(self):
+        if self.controller:
+            self.controller.handle_radio_sort()
+
+    def clicked_checkbutton_sort(self):
+        if self.controller:
+            self.controller.handle_checkbutton_sort()
 
     def clicked_listBoxData(self):
         pass

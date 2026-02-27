@@ -82,8 +82,14 @@ class EntryController:
 
         self.model.save_entries()
 
-    def handle_display_radio(self):
+    def handle_radio_display(self):
         self._update_listboxDataView()
+
+    def handle_radio_sort(self):
+        pass
+
+    def handle_checkbutton_sort(self):
+        pass
 
     #=============================================
     #      Dialogs, UI Updates
