@@ -1,8 +1,6 @@
-from tkinter import filedialog as fd
+import  tkinter as      tk
+from    tkinter import  filedialog as fd
 
-'''
-https://www.pythontutorial.net/tkinter/tkinter-open-file-dialog/
-'''
 
 class EntryController:
 
@@ -14,26 +12,44 @@ class EntryController:
     #      Handle Commands
     #=============================================
 
-    def choose_meibo_file(self):
-        filetypes = (('CSV ファイル', '*.csv'), ('全部', '*.*'))
-        path = fd.askopenfilename(
-            title       ='名簿ファイルを選択してください',
-            initialdir  ='.',
-            filetypes   = filetypes 
-        )
+    def choose_meibo_file(self) -> None:
+        '''
+        create a dialog for the user to chooose a meibo csv
+
+        if chosen, set the meibo path and attempt to load it
+            if success:
+                display the meibo data in the listbox
+            if  fails: 
+                display error dialog
+        '''
+        label = self.view.labelMeiboPath
+        self._reset_label(label)
+
+        path = self._open_file_dialog('名簿')
 
         # cancel button clicked, nothing chosen
         if len(path) == 0:
             return
-
-        print(path)
-        self.model.set_meibo_path(path)
         
-        success = self.model.load_meibo()
-        return success
+        # make sure a CSV was chosen
+        if path.split('.')[-1] != 'csv':
+            self._show_label_error(label, 'choose a CSV file')
+
+        # try loading the CSV
+        self.model.set_meibo_path(path)
+        msg = self.model.load_meibo()        
+
+        if msg == '':
+            self._show_label_message(label, path)
+            '''TODO: show meibo in listbox if radio is configured'''
+        else:
+            self._show_label_error(label, msg)
 
 
     def choose_entry_file(self):
+        '''
+        Handle the choosing of a new file or loading an existing one
+        '''
         pass
 
 
@@ -62,19 +78,29 @@ class EntryController:
         self.model.save_entries()
 
     #=============================================
-    #      Update UI
+    #      Dialogs, UI Updates
     #=============================================
-    
-    def _show_msg_labelMessage(self):
-        pass
 
-    def _show_error_label_message(self):
-        pass
+    def _open_file_dialog(self, title:str, initialdir:str='.') -> str:
+        filetypes = (('CSV ファイル', '*.csv'), ('全部', '*.*'))
+        
+        path = fd.askopenfilename(
+            title       = title,
+            initialdir  = initialdir,
+            filetypes   = filetypes 
+        )
+        return path
 
-    def _reset_labelMessage(self):
-        self.view.labelMessage.config(text='')
+    def _show_label_message(self, label:tk.Label, message:str) -> None:
+        label.config(text=message, fg='black')
 
-    def _reset_entry_vars(self):
+    def _show_label_error(self, label:tk.Label, message:str) -> None:
+        label.config(text=message, fg='red')
+
+    def _reset_label(self, label:tk.Label) -> None:
+        self._show_label_message(label, '')
+
+    def _reset_entryvars(self) -> None:
         self.view.var_studentClass.set('')
         self.view.var_studentNumber.set('')
         self.view.var_studentRank.set('')

@@ -2,48 +2,60 @@
 from collections import defaultdict
 import csv
 
+MEIBO_FIELDS = ['組','番号','性別','苗字','名前']
 ENTRY_FIELDS = ['順位','組','番号','性別','苗字','名前']
 
 class EntryModel:
 
     def __init__(self):
-        self.meibo_path     = 'meibo.csv'
-        self.entries_path   = 'entries.csv'
+        self.meibo_path     = ''
+        self.entries_path   = ''
         
-        self.meibo_data = {}
+        self.meibo_data = defaultdict(dict)
         self.entry_data = []
 
         self.meibo_classes = []
-
-        self.load_meibo()
-
     
     #=============================================
     #      File Operations
     #=============================================        
 
-    def set_meibo_path(self, path:str) -> None:
+    def set_meibo_path(self, path:str) -> bool:
         self.meibo_path = path
         
     def get_meibo_path(self) -> str:
         return self.meibo_path
 
-    def load_meibo(self) -> None:
-        self.meibo_data = defaultdict(dict)
+    def load_meibo(self) -> str:
+        # read meibo file
+        try:
+            rows = []
+            with open(self.meibo_path, mode='r', encoding='utf-8') as csv_file:
+                csv_reader = csv.DictReader(csv_file)
+                fieldnames = csv_reader.fieldnames
+                for row in csv_reader:
+                    rows.append(row)
+        except:
+            return f'error while opening{self.meibo_path}'
 
-        with open(self.meibo_path, mode='r', encoding='utf-8') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
+        # check the meibo data
+        msg = self.check_meibo_file_format(fieldnames, rows)
+        if msg != '':
+            return msg
 
-            for row in csv_reader:
-                self.meibo_data[row['組']][row['番号']] = {
-                    '苗字': row['苗字'],
-                    '名前': row['名前'],
-                    '性別': row['性別']
-                }
-        
-        self.meibo_classes = [k for k in self.meibo_data.keys()]
+        # everything looks good, parse the data
+        meibo_data = defaultdict(dict)
+        for row in rows:
+            self.meibo_data[row['組']][row['番号']] = {
+                '苗字': row['苗字'],
+                '名前': row['名前'],
+                '性別': row['性別']
+            }
+        self.meibo_classes  = [k for k in self.meibo_data.keys()]
+        self.meibo_data     = meibo_data
 
-        return True
+        return ''
+
     
     def get_entries_path(self) -> str:
         return self.entries_path
@@ -106,6 +118,8 @@ class EntryModel:
         self.entry_data.append(newEntry)
         return newEntry
 
+    def get_entry_str(self, entry:dict) -> str:
+        return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
 
     def get_student_classes(self):
         return self.meibo_classes
@@ -116,6 +130,21 @@ class EntryModel:
     #=============================================
     #      Data Validataion
     #=============================================
+
+    def check_meibo_file_format(self, fieldnames:list, rows:dict) -> str:
+        
+        # the meibo may have other fields, but the expected ones must be included
+        for field in MEIBO_FIELDS:
+            if not field in fieldnames:
+                return f'{field} must be in CSV fields'
+            
+        # make sure that all the data is there for every row
+        for row in rows:
+            for field in MEIBO_FIELDS:
+                if row[field] == None:
+                    return f'atleast one row was missing data'
+        
+        return ''
 
     def check_entry_data(self, studentClass, studentNumber, studentRank) -> str:
         messages = [
