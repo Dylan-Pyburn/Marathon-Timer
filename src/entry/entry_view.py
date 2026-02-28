@@ -16,7 +16,6 @@ class EntryView(Frame):
     def set_controller(self, controller):
         self.controller = controller
 
-
     def configure_vars(self):
         self.var_studentClass   = StringVar(self)
         self.var_studentNumber  = StringVar(self)
@@ -54,7 +53,6 @@ class EntryView(Frame):
         self.buttonChooseMeiboFile.grid(    row=0, column=1, padx=10, pady=10)
         self.buttonChooseEntryFile.grid(    row=1, column=1, padx=10, pady=10)
 
-
     def configure_frameDataEntry(self):
         self.frameDataEntry = Frame(self, width=500, height=150, bg="white")
 
@@ -79,7 +77,6 @@ class EntryView(Frame):
         self.entryStudentNumber.grid(       row=1,  column=1,   padx=10,    pady=10)
         self.entryStudentRank.grid(         row=1,  column=2,   padx=10,    pady=10)
         self.buttonEnterData.grid(          row=1,  column=3,   padx=20,    pady=10)
-
     
     def configure_frameSaveEntries(self):
         self.frameSaveEntries       = Frame(self, bg='white')
@@ -92,7 +89,6 @@ class EntryView(Frame):
 
         self.labelMessage.pack(side=LEFT, padx=10, pady=10)
         self.buttonSaveEntries.pack(side=RIGHT, padx=10, pady=10)
-
 
     def configure_frameDataView(self):
         self.frameDataView          = Frame(self, bg='white')
@@ -147,7 +143,6 @@ class EntryView(Frame):
         self.radioOldest.pack(side=TOP)
         self.radioOrderMale.pack(side=TOP)
         self.radioOrderFemale.pack(side=TOP)
-
    
     #=============================================
     #      Commands

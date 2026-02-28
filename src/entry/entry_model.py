@@ -69,7 +69,6 @@ class EntryModel:
 
         return ''
 
-    
     def get_entries_path(self) -> str:
         return self.entries_path
     
@@ -92,6 +91,10 @@ class EntryModel:
     #=============================================
     #      Data Processing
     #=============================================
+
+    @staticmethod
+    def get_entry_str(entry:dict) -> str:
+        return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
 
     def meibo_lookup(self, studentClass:str, studentNumber:str) -> dict:
         '''
@@ -148,10 +151,6 @@ class EntryModel:
         self.entry_data.append(newEntry)
         return newEntryStr
 
-    @staticmethod
-    def get_entry_str(entry:dict) -> str:
-        return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
-
     def get_meibo_data(self) -> dict:
         return self.meibo_data
 
@@ -199,7 +198,6 @@ class EntryModel:
     #=============================================
 
     def check_meibo_file_format(self, fieldnames:list, rows:dict) -> str:
-        
         # the meibo may have other fields, but the expected ones must be included
         for field in MEIBO_FIELDS:
             if not field in fieldnames:
@@ -214,6 +212,7 @@ class EntryModel:
         return ''
 
     def check_entry_data(self, studentClass, studentNumber, studentRank) -> str:
+        # first just check that the data is of acceptable format
         messages = [
             self._check_format_studentClass(studentClass),
             self._check_format_studentNumber(studentNumber),
@@ -257,7 +256,6 @@ class EntryModel:
             
         return ''
 
-
     def _check_format_studentClass(self, studentClass) -> str:
         if studentClass == '':
             return f'組を入れてください'
@@ -267,7 +265,6 @@ class EntryModel:
 
         return ''
 
-   
     def _check_format_studentNumber(self, studentNumber) -> str:
         if studentNumber == '':
             return f'出席番号を入れてください'
@@ -283,7 +280,6 @@ class EntryModel:
 
         return ''
        
-
     def _check_format_studentRank(self, studentRank) -> str:
         if studentRank == '':
             return f'順位を入れてください'
