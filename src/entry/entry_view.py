@@ -1,6 +1,6 @@
-import tkinter as tk
-from tkinter import ttk
-
+import tkinter      as tk
+import ttkbootstrap as ttk
+import tkshadowfy   as tks
 
 class EntryView(ttk.Frame):
 
@@ -15,6 +15,7 @@ class EntryView(ttk.Frame):
         self.controller = controller
 
     def configure_vars(self):
+        self.var_labelMeiboPath = tk.StringVar(self)
         self.var_studentClass   = tk.StringVar(self)
         self.var_studentNumber  = tk.StringVar(self)
         self.var_studentRank    = tk.StringVar(self)
@@ -37,19 +38,29 @@ class EntryView(ttk.Frame):
     def configure_frameFileSelection(self):
         self.frameFileSelection     = ttk.Frame(self)
 
-        self.labelMeiboPath         = ttk.Label(self.frameFileSelection, text='名簿を選択してください')
-        self.labelEntryPath         = ttk.Label(self.frameFileSelection, text='順位の結果ファイルを選択してください')
-
-        self.buttonChooseMeiboFile  = ttk.Button(self.frameFileSelection, text='名簿の読み込み', command=self.clicked_buttonChooseMeiboFile)
-        self.buttonChooseEntryFile  = ttk.Button(self.frameFileSelection, text='結果ファイルの選択', command=self.clicked_buttonChooseEntryFile)
+        frameMeiboSelection         = ttk.Frame(self.frameFileSelection)
+        self.labelMeiboPath         = ttk.Label(frameMeiboSelection, text='ファイルを選択してください')
+        self.buttonChooseMeiboFile  = ttk.Button(frameMeiboSelection, text='名簿の読み込み', width=15,
+                                                    command=self.clicked_buttonChooseMeiboFile)
+        
+        frameEntrySelection         = ttk.Frame(self.frameFileSelection)
+        self.labelEntryPath         = ttk.Label(frameEntrySelection, text='順位の結果ファイルを選択してください')
+        self.buttonChooseEntryFile  = ttk.Button(frameEntrySelection, text='結果ファイルの選択', width=15,
+                                                    command=self.clicked_buttonChooseEntryFile)
 
         #---- Placement --------------------------
-        self.frameFileSelection.pack(side=tk.TOP, pady=10)
+        # just didn't want to type the same thing many times
+        def place(frame, label, button):
+            frame.grid_columnconfigure(0,weight=1)
+            frame.grid_columnconfigure(1,weight=1)
+            frame.pack(side='top', fill='x', pady=10)
+            label.grid( row=0, column=0, sticky='w')
+            button.grid(row=0, column=1, sticky='e')
+        
+        place(frameMeiboSelection, self.labelMeiboPath, self.buttonChooseMeiboFile)
+        place(frameEntrySelection, self.labelEntryPath, self.buttonChooseEntryFile)
+        self.frameFileSelection.pack(fill='x', padx=200, pady=20)
 
-        self.labelMeiboPath.grid(           row=0, column=0, padx=10, pady=10)
-        self.labelEntryPath.grid(           row=1, column=0, padx=10, pady=10)
-        self.buttonChooseMeiboFile.grid(    row=0, column=1, padx=10, pady=10)
-        self.buttonChooseEntryFile.grid(    row=1, column=1, padx=10, pady=10)
 
     def configure_frameDataEntry(self):
         self.frameDataEntry = ttk.Frame(self, width=500, height=150)

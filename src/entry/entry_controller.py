@@ -29,7 +29,6 @@ class EntryController:
                 display error dialog
         '''
         label = self.view.labelMeiboPath
-        self._reset_label(label)
 
         path = self._open_file_dialog('名簿')
 

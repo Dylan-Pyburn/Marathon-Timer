@@ -1,6 +1,5 @@
-import  tkinter as      tk
-from    tkinter import  ttk
-#import ttkbootstrap
+import  tkinter         as  tk
+import  ttkbootstrap    as  ttk
 
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
@@ -49,25 +48,27 @@ TODO
     stats
 '''
 
+THEME           = 'darkly'
+
 WINDOW_TITLE    = 'マラソン タイマー'
-WINDOW_WIDTH    = 700
+WINDOW_WIDTH    = 1000
 WINDOW_HEIGHT   = 700
 
-class App(tk.Tk):
+class App(ttk.Window):
     
     def __init__(self):
         super().__init__()
 
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
-        
+
 
         self.entryFrame         = EntryView(self)
         self.entryModel         = EntryModel()
         self.entryController    = EntryController(self.entryFrame, self.entryModel)
 
         self.entryFrame.set_controller(self.entryController)
-        self.entryFrame.grid(row=0, column=0, padx=20, pady=20)
+        self.entryFrame.pack(expand=True, fill=tk.BOTH)
 
         self.bind('<Return>', self.entryFrame.pressed_enter)
 

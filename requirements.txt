@@ -1,2 +1,5 @@
 ttkbootstrap
+customtkinter
+tkshadowfy
+
 matplotlib
