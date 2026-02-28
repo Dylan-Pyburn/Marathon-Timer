@@ -2,7 +2,9 @@ import tkinter      as tk
 
 from tkinter import ttk
 
-class EntryView(ttk.Frame):
+import customtkinter    as ctk
+
+class EntryView(ctk.CTkFrame):
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -19,12 +21,14 @@ class EntryView(ttk.Frame):
         self.var_studentClass   = tk.StringVar(self)
         self.var_studentNumber  = tk.StringVar(self)
         self.var_studentRank    = tk.StringVar(self)
+        self.var_radioAppTheme  = tk.StringVar(self, 'light')
         self.var_radioDataView  = tk.StringVar(self, 'meibo')
         self.var_radioDataSort  = tk.StringVar(self, 'newest')
         self.var_checkboxMale   = tk.BooleanVar(self, value=True)
         self.var_checkboxFemale = tk.BooleanVar(self, value=True)
     
     def configure_frames(self):
+        self.configure_frameAppTheme()
         self.configure_frameFileSelection()
         self.configure_frameDataEntry()
         self.configure_frameMessage()
@@ -35,21 +39,35 @@ class EntryView(ttk.Frame):
     #      UI Elements
     #=============================================
 
-    def configure_frameFileSelection(self):
-        self.frameFileSelection     = ttk.Frame(self)
+    def configure_frameAppTheme(self):
+        self.frameAppTheme          = ctk.CTkFrame(self)
 
-        frameMeiboSelection         = ttk.Frame(self.frameFileSelection)
-        self.labelMeiboPath         = ttk.Label(frameMeiboSelection, text='ファイルを選択してください')
-        self.buttonChooseMeiboFile  = ttk.Button(frameMeiboSelection, text='名簿の読み込み',
+        self.switchAppTheme         = ctk.CTkSwitch(self.frameAppTheme, text='Light / Dark theme',
+                                                        command=self.clicked_switchAppTheme)
+        
+        # uncomment if you want to start in dark mode
+        #self.switchAppTheme.toggle()
+        
+        #---- Placement --------------------------
+        self.switchAppTheme.pack(anchor='w')
+        self.frameAppTheme.pack(fill='x', padx=20, pady=10)
+
+
+    def configure_frameFileSelection(self):
+        self.frameFileSelection     = ctk.CTkFrame(self)
+
+        frameMeiboSelection         = ctk.CTkFrame(self.frameFileSelection)
+        self.labelMeiboPath         = ctk.CTkLabel(frameMeiboSelection, text='ファイルを選択してください')
+        self.buttonChooseMeiboFile  = ctk.CTkButton(frameMeiboSelection, text='名簿の読み込み',
                                                     command=self.clicked_buttonChooseMeiboFile)
         
-        frameEntrySelection         = ttk.Frame(self.frameFileSelection)
-        self.labelEntryPath         = ttk.Label(frameEntrySelection, text='順位の結果ファイルを選択してください')
-        self.buttonChooseEntryFile  = ttk.Button(frameEntrySelection, text='結果ファイルの選択',
+        frameEntrySelection         = ctk.CTkFrame(self.frameFileSelection)
+        self.labelEntryPath         = ctk.CTkLabel(frameEntrySelection, text='順位の結果ファイルを選択してください')
+        self.buttonChooseEntryFile  = ctk.CTkButton(frameEntrySelection, text='結果ファイルの選択',
                                                     command=self.clicked_buttonChooseEntryFile)
 
-        frameSaveEntries            = ttk.Frame(self.frameFileSelection)
-        self.buttonSaveEntries      = ttk.Button(frameSaveEntries, text='結果の保存',
+        frameSaveEntries            = ctk.CTkFrame(self.frameFileSelection)
+        self.buttonSaveEntries      = ctk.CTkButton(frameSaveEntries, text='結果の保存',
                                                     command=self.clicked_buttonSaveEntries)
 
         #---- Placement --------------------------
@@ -71,17 +89,17 @@ class EntryView(ttk.Frame):
 
 
     def configure_frameDataEntry(self):
-        self.frameDataEntry = ttk.Frame(self, width=500, height=150)
+        self.frameDataEntry = ctk.CTkFrame(self, width=500, height=150)
 
-        self.labelStudentClass      = ttk.Label(self.frameDataEntry, text='組')
-        self.labelStudentNumber     = ttk.Label(self.frameDataEntry, text='出席番号')
-        self.labelStudentRank       = ttk.Label(self.frameDataEntry, text='順位')
+        self.labelStudentClass      = ctk.CTkLabel(self.frameDataEntry, text='組')
+        self.labelStudentNumber     = ctk.CTkLabel(self.frameDataEntry, text='出席番号')
+        self.labelStudentRank       = ctk.CTkLabel(self.frameDataEntry, text='順位')
 
-        self.entryStudentClass      = ttk.Entry(self.frameDataEntry, textvariable=self.var_studentClass)
-        self.entryStudentNumber     = ttk.Entry(self.frameDataEntry, textvariable=self.var_studentNumber)
-        self.entryStudentRank       = ttk.Entry(self.frameDataEntry, textvariable=self.var_studentRank)
+        self.entryStudentClass      = ctk.CTkEntry(self.frameDataEntry, textvariable=self.var_studentClass)
+        self.entryStudentNumber     = ctk.CTkEntry(self.frameDataEntry, textvariable=self.var_studentNumber)
+        self.entryStudentRank       = ctk.CTkEntry(self.frameDataEntry, textvariable=self.var_studentRank)
 
-        self.buttonEnterData        = ttk.Button(self.frameDataEntry, text='追加', command=self.clicked_buttonEnterData)
+        self.buttonEnterData        = ctk.CTkButton(self.frameDataEntry, text='追加', command=self.clicked_buttonEnterData)
         
         #---- Placement --------------------------
         self.frameDataEntry.pack(side='top', anchor="center", pady=10)
@@ -96,25 +114,25 @@ class EntryView(ttk.Frame):
         self.buttonEnterData.grid(          row=1,  column=3,   padx=20,    pady=10)
     
     def configure_frameMessage(self):
-        self.frameMessage   = ttk.Frame(self)
-        self.labelMessage   = ttk.Label(self.frameMessage)
+        self.frameMessage   = ctk.CTkFrame(self)
+        self.labelMessage   = ctk.CTkLabel(self.frameMessage)
 
         #---- Placement --------------------------
         self.labelMessage.pack()
         self.frameMessage.pack(side='top', padx=200, pady=10)
 
     def configure_frameDataView(self):
-        self.frameDataView          = ttk.Frame(self)
+        self.frameDataView          = ctk.CTkFrame(self)
 
-        self.frameDataViewRadios    = ttk.Frame(self.frameDataView)
-        self.radioMeibo             = ttk.Radiobutton(self.frameDataViewRadios, text='名簿', value='meibo', 
+        self.frameDataViewRadios    = ctk.CTkFrame(self.frameDataView)
+        self.radioMeibo             = ctk.CTkRadioButton(self.frameDataViewRadios, text='名簿', value='meibo', 
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
-        self.radioEntries           = ttk.Radiobutton(self.frameDataViewRadios, text='結果', value='entry', 
+        self.radioEntries           = ctk.CTkRadioButton(self.frameDataViewRadios, text='結果', value='entry', 
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
 
-        self.frameDataViewDisplay   = ttk.Frame(self.frameDataView)
+        self.frameDataViewDisplay   = ctk.CTkFrame(self.frameDataView)
         self.listboxDataView        = tk.Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=tk.SINGLE)
-        self.scrollbarDataView      = ttk.Scrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
+        self.scrollbarDataView      = ctk.CTkScrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
 
@@ -130,20 +148,20 @@ class EntryView(ttk.Frame):
         self.listboxDataView.pack(side=tk.LEFT, fill=tk.BOTH)
 
     def configure_frameDataViewControls(self):
-        self.frameDataViewControls  = ttk.Frame(self.frameDataView)
+        self.frameDataViewControls  = ctk.CTkFrame(self.frameDataView)
 
-        self.checkButtonMale        = ttk.Checkbutton(self.frameDataViewControls, text='男子', command=self.clicked_checkbutton_sort,
+        self.checkButtonMale        = ctk.CTkCheckBox(self.frameDataViewControls, text='男子', command=self.clicked_checkbutton_sort,
                                                         variable=self.var_checkboxMale, onvalue=True, offvalue=False)
-        self.checkButtonFemale      = ttk.Checkbutton(self.frameDataViewControls, text='女子', command=self.clicked_checkbutton_sort,
+        self.checkButtonFemale      = ctk.CTkCheckBox(self.frameDataViewControls, text='女子', command=self.clicked_checkbutton_sort,
                                                         variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
         separator                   = ttk.Separator(self.frameDataViewControls, orient=tk.HORIZONTAL)
-        self.radioNewest            = ttk.Radiobutton(self.frameDataViewControls, text='最新', value='newest',
+        self.radioNewest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最新', value='newest',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOldest            = ttk.Radiobutton(self.frameDataViewControls, text='最古', value='oldest',
+        self.radioOldest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最古', value='oldest',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOrderMale         = ttk.Radiobutton(self.frameDataViewControls, text='順位：男性', value='sortedMale',
+        self.radioOrderMale         = ctk.CTkRadioButton(self.frameDataViewControls, text='順位：男性', value='sortedMale',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOrderFemale       = ttk.Radiobutton(self.frameDataViewControls, text='順位：女性', value='sortedFemale',
+        self.radioOrderFemale       = ctk.CTkRadioButton(self.frameDataViewControls, text='順位：女性', value='sortedFemale',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         
         #---- Placement --------------------------
@@ -160,6 +178,10 @@ class EntryView(ttk.Frame):
     #=============================================
     #      Commands
     #=============================================
+
+    def clicked_switchAppTheme(self):
+        if self.controller:
+            self.controller.switch_app_theme()
 
     def clicked_buttonChooseMeiboFile(self):
         if self.controller:

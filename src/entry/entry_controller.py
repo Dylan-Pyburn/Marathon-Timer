@@ -1,5 +1,6 @@
-import  tkinter as      tk
-from    tkinter import  filedialog as fd
+import  tkinter         as tk
+import  customtkinter   as ctk
+from    tkinter import  filedialog  as fd
 
 from src.entry.entry_model import EntryModel
 
@@ -14,9 +15,16 @@ class EntryController:
         self.view   = view
         self.model  = model
 
+        self.switch_app_theme()
+
     #=============================================
     #      Handle Commands
     #=============================================
+
+    def switch_app_theme(self):
+        darkmode = self.view.switchAppTheme.get()
+        ctk.set_appearance_mode( 'dark' if darkmode else 'light' )
+
 
     def choose_meibo_file(self) -> None:
         '''
