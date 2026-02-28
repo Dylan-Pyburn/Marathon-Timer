@@ -40,13 +40,13 @@ class EntryView(ctk.CTkFrame):
     #=============================================
 
     def configure_frameAppTheme(self):
-        self.frameAppTheme          = ctk.CTkFrame(self)
+        self.frameAppTheme          = ctk.CTkFrame(self, fg_color='transparent')
 
         self.switchAppTheme         = ctk.CTkSwitch(self.frameAppTheme, text='Light / Dark theme',
                                                         command=self.clicked_switchAppTheme)
         
         # uncomment if you want to start in dark mode
-        #self.switchAppTheme.toggle()
+        self.switchAppTheme.toggle()
         
         #---- Placement --------------------------
         self.switchAppTheme.pack(anchor='w')
@@ -149,11 +149,11 @@ class EntryView(ctk.CTkFrame):
     def configure_frameDataViewControls(self):
         self.frameDataViewControls  = ctk.CTkFrame(self.frameDataView)
 
-        self.checkButtonMale        = ctk.CTkCheckBox(self.frameDataViewControls, text='男子', command=self.clicked_checkbutton_sort,
+        self.checkButtonMale        = ctk.CTkCheckBox(self.frameDataViewControls, text='男子', command=self.clicked_checkbox_sort,
                                                         variable=self.var_checkboxMale, onvalue=True, offvalue=False)
-        self.checkButtonFemale      = ctk.CTkCheckBox(self.frameDataViewControls, text='女子', command=self.clicked_checkbutton_sort,
+        self.checkButtonFemale      = ctk.CTkCheckBox(self.frameDataViewControls, text='女子', command=self.clicked_checkbox_sort,
                                                         variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
-        separator                   = ttk.Separator(self.frameDataViewControls, orient=tk.HORIZONTAL)
+        separator                   = ttk.Separator(self.frameDataViewControls, orient=tk.HORIZONTAL, )
         self.radioNewest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最新', value='newest',
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         self.radioOldest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最古', value='oldest',
@@ -168,7 +168,7 @@ class EntryView(ctk.CTkFrame):
 
         self.checkButtonMale.pack(side=tk.TOP)
         self.checkButtonFemale.pack(side=tk.TOP)
-        separator.pack(side=tk.TOP, pady=5)
+        separator.pack(side=tk.TOP, fill='x', pady=5)
         self.radioNewest.pack(side=tk.TOP)
         self.radioOldest.pack(side=tk.TOP)
         self.radioOrderMale.pack(side=tk.TOP)
@@ -206,7 +206,7 @@ class EntryView(ctk.CTkFrame):
         if self.controller:
             self.controller.handle_radio_sort()
 
-    def clicked_checkbutton_sort(self):
+    def clicked_checkbox_sort(self):
         if self.controller:
             self.controller.handle_checkbutton_sort()
 
