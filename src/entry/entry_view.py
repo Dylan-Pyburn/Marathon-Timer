@@ -79,7 +79,6 @@ class EntryView(ctk.CTkFrame):
             if label:
                 label.grid( row=0, column=0, sticky='w')
             if button:
-                button.configure(width=18)
                 button.grid(row=0, column=1, sticky='e')
         
         place(frameMeiboSelection,  self.labelMeiboPath,    self.buttonChooseMeiboFile)
