@@ -193,10 +193,10 @@ class EntryController:
         return path
 
     def _show_label_message(self, label:tk.Label, message:str) -> None:
-        label.config(text=message, fg='black')
+        label.config(text=message)
 
     def _show_label_error(self, label:tk.Label, message:str) -> None:
-        label.config(text=message, fg='red')
+        label.config(text=message)
 
     def _reset_label(self, label:tk.Label) -> None:
         self._show_label_message(label, '')
