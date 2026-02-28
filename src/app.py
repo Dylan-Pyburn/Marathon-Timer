@@ -1,5 +1,5 @@
 import  tkinter         as  tk
-import  ttkbootstrap    as  ttk
+#import  ttkbootstrap    as  ttk
 
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
@@ -54,7 +54,7 @@ WINDOW_TITLE    = 'マラソン タイマー'
 WINDOW_WIDTH    = 1000
 WINDOW_HEIGHT   = 700
 
-class App(ttk.Window):
+class App(tk.Tk):
     
     def __init__(self):
         super().__init__()

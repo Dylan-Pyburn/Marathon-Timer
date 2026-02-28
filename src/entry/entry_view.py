@@ -1,6 +1,6 @@
 import tkinter      as tk
-import ttkbootstrap as ttk
-import tkshadowfy   as tks
+
+from tkinter import ttk
 
 class EntryView(ttk.Frame):
 
@@ -27,7 +27,7 @@ class EntryView(ttk.Frame):
     def configure_frames(self):
         self.configure_frameFileSelection()
         self.configure_frameDataEntry()
-        self.configure_frameSaveEntries()
+        self.configure_frameMessage()
         self.configure_frameDataView()
         self.configure_frameDataViewControls()
     
@@ -40,25 +40,33 @@ class EntryView(ttk.Frame):
 
         frameMeiboSelection         = ttk.Frame(self.frameFileSelection)
         self.labelMeiboPath         = ttk.Label(frameMeiboSelection, text='ファイルを選択してください')
-        self.buttonChooseMeiboFile  = ttk.Button(frameMeiboSelection, text='名簿の読み込み', width=15,
+        self.buttonChooseMeiboFile  = ttk.Button(frameMeiboSelection, text='名簿の読み込み',
                                                     command=self.clicked_buttonChooseMeiboFile)
         
         frameEntrySelection         = ttk.Frame(self.frameFileSelection)
         self.labelEntryPath         = ttk.Label(frameEntrySelection, text='順位の結果ファイルを選択してください')
-        self.buttonChooseEntryFile  = ttk.Button(frameEntrySelection, text='結果ファイルの選択', width=15,
+        self.buttonChooseEntryFile  = ttk.Button(frameEntrySelection, text='結果ファイルの選択',
                                                     command=self.clicked_buttonChooseEntryFile)
+
+        frameSaveEntries            = ttk.Frame(self.frameFileSelection)
+        self.buttonSaveEntries      = ttk.Button(frameSaveEntries, text='結果の保存',
+                                                    command=self.clicked_buttonSaveEntries)
 
         #---- Placement --------------------------
         # just didn't want to type the same thing many times
         def place(frame, label, button):
             frame.grid_columnconfigure(0,weight=1)
             frame.grid_columnconfigure(1,weight=1)
-            frame.pack(side='top', fill='x', pady=10)
-            label.grid( row=0, column=0, sticky='w')
-            button.grid(row=0, column=1, sticky='e')
+            frame.pack(side='top', fill='x', pady=4)
+            if label:
+                label.grid( row=0, column=0, sticky='w')
+            if button:
+                button.configure(width=18)
+                button.grid(row=0, column=1, sticky='e')
         
-        place(frameMeiboSelection, self.labelMeiboPath, self.buttonChooseMeiboFile)
-        place(frameEntrySelection, self.labelEntryPath, self.buttonChooseEntryFile)
+        place(frameMeiboSelection,  self.labelMeiboPath,    self.buttonChooseMeiboFile)
+        place(frameEntrySelection,  self.labelEntryPath,    self.buttonChooseEntryFile)
+        place(frameSaveEntries,     None,                   self.buttonSaveEntries)
         self.frameFileSelection.pack(fill='x', padx=200, pady=20)
 
 
@@ -87,17 +95,13 @@ class EntryView(ttk.Frame):
         self.entryStudentRank.grid(         row=1,  column=2,   padx=10,    pady=10)
         self.buttonEnterData.grid(          row=1,  column=3,   padx=20,    pady=10)
     
-    def configure_frameSaveEntries(self):
-        self.frameSaveEntries       = ttk.Frame(self)
-        
-        self.labelMessage           = ttk.Label(self.frameSaveEntries)
-        self.buttonSaveEntries      = ttk.Button(self.frameSaveEntries, text='保存', command=self.clicked_buttonSaveEntries)
+    def configure_frameMessage(self):
+        self.frameMessage   = ttk.Frame(self)
+        self.labelMessage   = ttk.Label(self.frameMessage)
 
         #---- Placement --------------------------
-        self.frameSaveEntries.pack(side=tk.TOP, padx=10, pady=10)
-
-        self.labelMessage.pack(side=tk.LEFT, padx=10, pady=10)
-        self.buttonSaveEntries.pack(side=tk.RIGHT, padx=10, pady=10)
+        self.labelMessage.pack()
+        self.frameMessage.pack(side='top', padx=200, pady=10)
 
     def configure_frameDataView(self):
         self.frameDataView          = ttk.Frame(self)
