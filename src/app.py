@@ -49,19 +49,22 @@ TODO
     stats
 '''
 
-THEME           = 'darkly'
 
 WINDOW_TITLE    = 'マラソン タイマー'
-WINDOW_WIDTH    = 1000
-WINDOW_HEIGHT   = 700
+WINDOW_WIDTH    = 900
+WINDOW_HEIGHT   = 650
 
 class App(ctk.CTk):
     
     def __init__(self):
         super().__init__()
 
+        ctk.set_default_color_theme('themes/theme.json')
+
+
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
+        self.minsize(800, 650)
 
 
         self.entryFrame         = EntryView(self)

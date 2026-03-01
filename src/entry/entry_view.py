@@ -1,10 +1,13 @@
 import tkinter      as tk
 
 from tkinter import ttk
-
 import customtkinter    as ctk
 
 class EntryView(ctk.CTkFrame):
+
+    FRAME_THEME = {
+        'fg_color':'transparent',
+    }
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -12,6 +15,10 @@ class EntryView(ctk.CTkFrame):
 
         self.configure_vars()
         self.configure_frames()
+
+        
+        # uncomment if you want to start in dark mode
+        # self.switchAppTheme.toggle()
 
     def set_controller(self, controller):
         self.controller = controller
@@ -40,13 +47,10 @@ class EntryView(ctk.CTkFrame):
     #=============================================
 
     def configure_frameAppTheme(self):
-        self.frameAppTheme          = ctk.CTkFrame(self, fg_color='transparent')
+        self.frameAppTheme          = ctk.CTkFrame(self,)
 
         self.switchAppTheme         = ctk.CTkSwitch(self.frameAppTheme, text='Light / Dark theme',
                                                         command=self.clicked_switchAppTheme)
-        
-        # uncomment if you want to start in dark mode
-        self.switchAppTheme.toggle()
         
         #---- Placement --------------------------
         self.switchAppTheme.pack(anchor='w')
@@ -54,19 +58,19 @@ class EntryView(ctk.CTkFrame):
 
 
     def configure_frameFileSelection(self):
-        self.frameFileSelection     = ctk.CTkFrame(self)
+        self.frameFileSelection     = ctk.CTkFrame(self,)
 
-        frameMeiboSelection         = ctk.CTkFrame(self.frameFileSelection)
+        frameMeiboSelection         = ctk.CTkFrame(self.frameFileSelection, )
         self.labelMeiboPath         = ctk.CTkLabel(frameMeiboSelection, text='ファイルを選択してください')
         self.buttonChooseMeiboFile  = ctk.CTkButton(frameMeiboSelection, text='名簿の読み込み',
                                                     command=self.clicked_buttonChooseMeiboFile)
         
-        frameEntrySelection         = ctk.CTkFrame(self.frameFileSelection)
+        frameEntrySelection         = ctk.CTkFrame(self.frameFileSelection,)
         self.labelEntryPath         = ctk.CTkLabel(frameEntrySelection, text='順位の結果ファイルを選択してください')
         self.buttonChooseEntryFile  = ctk.CTkButton(frameEntrySelection, text='結果ファイルの選択',
                                                     command=self.clicked_buttonChooseEntryFile)
 
-        frameSaveEntries            = ctk.CTkFrame(self.frameFileSelection)
+        frameSaveEntries            = ctk.CTkFrame(self.frameFileSelection,)
         self.buttonSaveEntries      = ctk.CTkButton(frameSaveEntries, text='結果の保存',
                                                     command=self.clicked_buttonSaveEntries)
 
