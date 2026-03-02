@@ -106,6 +106,8 @@ class EntryController:
         self._reset_entryvars()
         self.view.entryStudentClass.focus_set()
 
+    def remove_entry(self, buttonNum):
+        self.view.scrollFrameDataView.remove_item(buttonNum)
 
     def save_entries(self):
         self._update_listboxDataView(viewmode='entry')
@@ -127,7 +129,7 @@ class EntryController:
 
 
     def handle_radio_display(self):
-        self._update_listboxDataView()
+        self._update_scrollFrameDataDisplay()
 
     def handle_radio_sort(self):
         if self.view.var_radioDataView.get() != 'entry':
@@ -143,7 +145,7 @@ class EntryController:
     #      Dialogs, UI Updates
     #=============================================
 
-    def _update_listboxDataView(self, viewmode:str='', sortmode=''):
+    def _update_scrollFrameDataDisplay(self,  viewmode:str='', sortmode=''):
         # set a new viewmode if provided otherwise use the current one
         if viewmode in RADIO_VIEW_MODES:
             self.view.var_radioDataView.set(viewmode)
@@ -156,17 +158,15 @@ class EntryController:
         else:
             sortmode = self.view.var_radioDataSort.get()
 
+        self.view.scrollFrameDataView.clear()
         if viewmode == 'meibo':
-            self._show_listbox_meibo()
-        elif viewmode == 'entry':
-            self._show_listbox_entries()
-        
-    def _show_listbox_meibo(self):
-        self.view.listboxDataView.delete(0, 'end')
-        
+            self._show_data_meibo()
+
+    def _show_data_meibo(self):
         data = self.model.get_meibo_rows()
         for line in data:
-            self.view.listboxDataView.insert('end', line)
+            self.view.scrollFrameDataView.add_item(line)
+
 
     def _show_listbox_entries(self):
         self.view.listboxDataView.delete(0, 'end')

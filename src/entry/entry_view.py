@@ -1,7 +1,7 @@
-import tkinter      as tk
-
-from tkinter import ttk
-import customtkinter    as ctk
+import  tkinter         as tk
+from    tkinter         import ttk
+import  customtkinter   as ctk
+import src.widgets.scrollable_button_frame as sf
 
 class EntryView(ctk.CTkFrame):
 
@@ -144,24 +144,20 @@ class EntryView(ctk.CTkFrame):
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
         
         self.frameDataViewDisplay   = ctk.CTkFrame(self.frameDataView)
-        self.listboxDataView        = tk.Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=tk.SINGLE)
-        self.scrollbarDataView      = ctk.CTkScrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
-        
-        self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
-
+        self.scrollFrameDataView = sf.ScrollableButtonFrame(self.frameDataViewDisplay, command=self.clicked_scrollFrameDelete)
 
         #---- Placement --------------------------
         self.frameDataView.pack(side=tk.TOP, pady=10)
         self.frameDataViewRadios.pack(side=tk.TOP)
         self.frameDataViewDisplay.pack(side=tk.LEFT)
+        self.scrollFrameDataView.pack()
 
         self.radioMeibo.pack(side=tk.LEFT)
         self.radioEntries.pack(side=tk.LEFT)
         self.radioTimerData.pack(side=tk.LEFT)
         self.radioResults.pack(side=tk.LEFT)
+        
 
-        self.scrollbarDataView.pack(side=tk.RIGHT, fill='y')
-        self.listboxDataView.pack(side=tk.LEFT, fill=tk.BOTH)
 
     def configure_frameDataViewControls(self):
         self.frameDataViewControls  = ctk.CTkFrame(self.frameDataView)
@@ -211,6 +207,12 @@ class EntryView(ctk.CTkFrame):
         if self.controller:
             self.controller.choose_time_data_file()
 
+    def clicked_scrollFrameEdit(self):
+        pass
+
+    def clicked_scrollFrameDelete(self, buttonNum):
+        if self.controller:
+            self.controller.remove_entry(buttonNum)
 
     def clicked_buttonEnterData(self):
         if self.controller:
@@ -221,6 +223,8 @@ class EntryView(ctk.CTkFrame):
             self.controller.save_entries()
 
     def clicked_radio_display(self):
+        #if self.controller:
+        #    self.controller.handle_radio_display()
         if self.controller:
             self.controller.handle_radio_display()
 
