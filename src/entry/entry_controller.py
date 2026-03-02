@@ -81,6 +81,9 @@ class EntryController:
             self.model.set_entries_path(path)
             self._show_label_message(label, path)
 
+    def choose_time_data_file(self):
+        pass
+
 
     def add_entry(self):
         label = self.view.labelMessage

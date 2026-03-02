@@ -58,20 +58,25 @@ class EntryView(ctk.CTkFrame):
 
 
     def configure_frameFileSelection(self):
-        self.frameFileSelection     = ctk.CTkFrame(self,)
+        self.frameFileSelection         = ctk.CTkFrame(self,)
 
-        frameMeiboSelection         = ctk.CTkFrame(self.frameFileSelection, )
-        self.labelMeiboPath         = ctk.CTkLabel(frameMeiboSelection, text='ファイルを選択してください')
-        self.buttonChooseMeiboFile  = ctk.CTkButton(frameMeiboSelection, text='名簿の読み込み',
+        frameMeiboSelection             = ctk.CTkFrame(self.frameFileSelection, )
+        self.labelMeiboPath             = ctk.CTkLabel(frameMeiboSelection, text='ファイルを選択してください')
+        self.buttonChooseMeiboFile      = ctk.CTkButton(frameMeiboSelection, text='名簿の読み込み',
                                                     command=self.clicked_buttonChooseMeiboFile)
         
-        frameEntrySelection         = ctk.CTkFrame(self.frameFileSelection,)
-        self.labelEntryPath         = ctk.CTkLabel(frameEntrySelection, text='順位の結果ファイルを選択してください')
-        self.buttonChooseEntryFile  = ctk.CTkButton(frameEntrySelection, text='結果ファイルの選択',
+        frameEntrySelection             = ctk.CTkFrame(self.frameFileSelection,)
+        self.labelEntryPath             = ctk.CTkLabel(frameEntrySelection, text='順位の結果ファイルを選択してください')
+        self.buttonChooseEntryFile      = ctk.CTkButton(frameEntrySelection, text='結果ファイルの選択',
+                                                    command=self.clicked_buttonChooseEntryFile)
+        
+        frameTimeDataSelection          = ctk.CTkFrame(self.frameFileSelection)
+        self.labelTimeDataPath          = ctk.CTkLabel(frameTimeDataSelection, text='時間データを選択してください')
+        self.buttonChooseTimeDataFile   = ctk.CTkButton(frameTimeDataSelection, text='時間データの選択',
                                                     command=self.clicked_buttonChooseEntryFile)
 
-        frameSaveEntries            = ctk.CTkFrame(self.frameFileSelection,)
-        self.buttonSaveEntries      = ctk.CTkButton(frameSaveEntries, text='結果の保存',
+        frameSaveEntries                = ctk.CTkFrame(self.frameFileSelection,)
+        self.buttonSaveEntries          = ctk.CTkButton(frameSaveEntries, text='結果の保存',
                                                     command=self.clicked_buttonSaveEntries)
 
         #---- Placement --------------------------
@@ -85,9 +90,10 @@ class EntryView(ctk.CTkFrame):
             if button:
                 button.grid(row=0, column=1, sticky='e')
         
-        place(frameMeiboSelection,  self.labelMeiboPath,    self.buttonChooseMeiboFile)
-        place(frameEntrySelection,  self.labelEntryPath,    self.buttonChooseEntryFile)
-        place(frameSaveEntries,     None,                   self.buttonSaveEntries)
+        place(frameMeiboSelection,    self.labelMeiboPath,    self.buttonChooseMeiboFile)
+        place(frameEntrySelection,    self.labelEntryPath,    self.buttonChooseEntryFile)
+        place(frameTimeDataSelection, self.labelTimeDataPath, self.buttonChooseTimeDataFile)
+        place(frameSaveEntries,       None,                   self.buttonSaveEntries)
         self.frameFileSelection.pack(fill='x', padx=200, pady=20)
 
 
@@ -128,24 +134,31 @@ class EntryView(ctk.CTkFrame):
         self.frameDataView          = ctk.CTkFrame(self)
 
         self.frameDataViewRadios    = ctk.CTkFrame(self.frameDataView)
-        self.radioMeibo             = ctk.CTkRadioButton(self.frameDataViewRadios, text='名簿', value='meibo', 
+        self.radioMeibo             = ctk.CTkRadioButton(self.frameDataViewRadios, text='名簿', value='meibo',
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
-        self.radioEntries           = ctk.CTkRadioButton(self.frameDataViewRadios, text='結果', value='entry', 
+        self.radioEntries           = ctk.CTkRadioButton(self.frameDataViewRadios, text='順位データ', value='entry', 
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
-
+        self.radioTimerData         = ctk.CTkRadioButton(self.frameDataViewRadios, text='時間データ', value='time', 
+                                                        variable=self.var_radioDataView, command=self.clicked_radio_display)
+        self.radioResults           = ctk.CTkRadioButton(self.frameDataViewRadios, text='結果', value='results', 
+                                                        variable=self.var_radioDataView, command=self.clicked_radio_display)
+        
         self.frameDataViewDisplay   = ctk.CTkFrame(self.frameDataView)
         self.listboxDataView        = tk.Listbox(self.frameDataViewDisplay, width=70, height=10, selectmode=tk.SINGLE)
         self.scrollbarDataView      = ctk.CTkScrollbar(self.frameDataViewDisplay, command=self.listboxDataView.yview)
         
         self.listboxDataView.config(yscrollcommand = self.scrollbarDataView.set)
 
+
         #---- Placement --------------------------
         self.frameDataView.pack(side=tk.TOP, pady=10)
         self.frameDataViewRadios.pack(side=tk.TOP)
         self.frameDataViewDisplay.pack(side=tk.LEFT)
-        
-        self.radioMeibo.pack(side=tk.LEFT, padx=10, pady=10)
-        self.radioEntries.pack(side=tk.RIGHT, padx=10, pady=10)
+
+        self.radioMeibo.pack(side=tk.LEFT)
+        self.radioEntries.pack(side=tk.LEFT)
+        self.radioTimerData.pack(side=tk.LEFT)
+        self.radioResults.pack(side=tk.LEFT)
 
         self.scrollbarDataView.pack(side=tk.RIGHT, fill='y')
         self.listboxDataView.pack(side=tk.LEFT, fill=tk.BOTH)
@@ -193,6 +206,11 @@ class EntryView(ctk.CTkFrame):
     def clicked_buttonChooseEntryFile(self):
         if self.controller:
             self.controller.choose_entry_file()
+
+    def clicked_buttonChooseTimeDataFile(self):
+        if self.controller:
+            self.controller.choose_time_data_file()
+
 
     def clicked_buttonEnterData(self):
         if self.controller:
