@@ -151,7 +151,7 @@ class EntryView(ctk.CTkFrame):
                                                         command=self.clicked_scrollFrameDelete)
 
         #---- Placement --------------------------
-        self.frameDataView.pack(side=tk.TOP, fill='both', pady=10)
+        self.frameDataView.pack(side=tk.TOP, fill='both', pady=10, padx=150)
         self.frameDataViewRadios.pack(side=tk.TOP)
         self.frameDataViewDisplay.pack(side=tk.TOP, fill='both')
         self.scrollFrameDataView.grid(row=0, column=0, sticky='nswe')

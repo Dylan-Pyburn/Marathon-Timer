@@ -22,30 +22,55 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         super().__init__(parent, **kwargs)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
-
-
+        self.configure(border_width=1)
+        
         self.command = command
 
+        
+
+        self.rows = {}
         self.items = []
         self.buttons = []
 
+    def _make_label(self, text):
+        return ctk.CTkLabel(self, 
+            text=text, 
+            compound="left", 
+            padx=5, 
+            anchor="w",
+            font=ctk.CTkFont(size=20)
+        )
 
-    def add_item(self, item:str):
+    def _make_delete_button(self) -> ctk.CTkButton:
+        button  = ctk.CTkButton(self, 
+            text='X',
+            anchor          = 'center', 
+            width           = 5, 
+            corner_radius   = 100, 
+            hover_color     = '#fcdad9', 
+            fg_color        = 'transparent',     
+            text_color      = 'red', 
+            font            = ctk.CTkFont(size=20, weight='bold')
+        )
+        if self.command:
+            x = len(self.buttons)
+            button.configure(command=lambda: self.command(x))
+        return button
+
+
+    def add_item(self, item:str, showDelBtn:bool=True):
         '''
         Add an item to the bottom of the list.
         params:
             item    : the item to be added in string form
         '''
-        label   = ctk.CTkLabel(self, text=item, compound="left", padx=5, anchor="w")
-        button  = ctk.CTkButton(self, text='X', fg_color='transparent', text_color='red', font=ctk.CTkFont(size=20))
-
-        if self.command:
-            x = len(self.buttons)
-            button.configure(command=lambda: self.command(x))
+        label  = self._make_label(item)
+        button = self._make_delete_button()
 
         # add to the end of the list (the bottom)
         label.grid(row=len(self.items), column=0, pady=(0, 10), sticky="w")
-        button.grid(row=len(self.buttons), column=1, pady=(0, 10), padx=5)
+        if showDelBtn:
+            button.grid(row=len(self.buttons), column=1, pady=(0, 10), padx=5)
 
         self.items.append(label)
         self.buttons.append(button)
@@ -63,8 +88,11 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     
     def edit_item(self, itemNum:int, newItem:str):
         '''
+        TODO
         Update the text of the given itemNum
         '''
+        return
+
         if itemNum < 0 or itemNum >= len(self.items):
             return
         
@@ -83,7 +111,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         button = self.buttons[itemNum]
 
         item.destroy()
-        button.destroy()
+        if button:
+            button.destroy()
 
         self.items.remove(item)
         self.buttons.remove(button)
@@ -98,7 +127,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         
         for item, button in zip(self.items, self.buttons):
             item.destroy()
-            button.destroy()
+            if button:
+             button.destroy()
 
         self.items.clear()
         self.buttons.clear()

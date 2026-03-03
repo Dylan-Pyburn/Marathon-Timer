@@ -165,7 +165,7 @@ class EntryController:
     def _show_data_meibo(self):
         data = self.model.get_meibo_rows()
         for line in data:
-            self.view.scrollFrameDataView.add_item(line)
+            self.view.scrollFrameDataView.add_item(line, showDelBtn=False)
 
 
     def _show_data_entries(self):
