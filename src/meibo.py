@@ -1,6 +1,201 @@
+from collections import defaultdict
+import csv
+
+REQUIRED_FIELDS = ['組','番号','区別','苗字','名前']
+
+
+class MeiboFieldnameException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+class MeiboDataException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 
 class Meibo:
 
-    def __init__(self):
-        pass
+    def __init__(self, path:str=''):
+        self.set_path(path)
 
+        self.lines = []  # the lines of the meibo file as stripped strings
+        self.data  = {}  # the parsed data from the meibo file
+
+
+    def set_path(self, path:str):
+        '''
+        Set the path to the meibo file.
+        Must be a CSV file.
+        '''
+        if not isinstance(str, path):
+            raise TypeError(f'Meibo path must be a string, but was {type(path)}')
+        if path.split('.')[-1] == 'csv':
+            raise ValueError('Meibo path must be a csv file.')
+        
+        self.path = path
+
+    def clear(self):
+        '''
+        DELETE ALL LINES AND DATA, as well as the set path.
+        '''
+        self.path = ''
+        self.lines.clear()
+        self.data.clear()
+    
+    def load(self) -> str:
+        '''
+        Read data from the file located at the set path.
+        Verify that the required fields are presents, no data is missing, and no students are repeated.
+        Return blank string if success, otherwise error message.
+        '''
+        # read the meibo file twice.
+        #  - once to get the lines as strings
+        #  - once to get use csvreader
+
+        # lines from csv file
+        lines = self._read_csv_lines()
+               
+        # get the csv data
+        fieldnames, csv_rows = self._read_csv_data()
+
+        # verify the data
+        self._check_file_format(fieldnames, csv_rows)
+
+        # everything looks good, parse the data and
+        # commit the data to the class variables
+        self.lines = lines
+        self.data  = self._parse_data(csv_rows)
+
+    #=============================================
+    #       Data Access
+    #=============================================
+
+    @overload
+    def __getitem__(self, studentClass:str):
+        return self.data[studentClass]
+
+
+    def lookup(self, studentClass:str, studentNumber:str) -> dict:
+        raise NotImplementedError
+
+    def get_path(self) -> str:
+        '''
+        Return the path to the meibo file.
+        '''
+        return self.path
+
+    def get_classes(self) -> list:
+        '''
+        Return a list containing all classes present in the meibo.
+        '''
+        return [k for k  in self.data]
+
+    def get_lines(self):
+        '''
+        Return a list containing the raw lines from the meibo file.
+        '''
+        return self.lines
+    
+    def get_data(self):
+        '''
+        Return the dictionary of processed meibo data:
+        Keys are 組.
+        Values are dictionaries whose keys are 番号 and values are student name and gender.
+        '''
+        return self.data
+
+    #=============================================
+    #       Utility
+    #=============================================
+
+    @staticmethod
+    def row_to_string(row:dict):
+        '''
+        Stringify a given row of data.
+        '''
+        return ', '.join([f'{k}: {v}' for k,v in row.items()])
+    
+    #=============================================
+    
+    def _parse_data(self,  rows:list):
+        '''
+        Parse the DictReader data into a dictionary.
+        '''
+        data  = defaultdict(dict)
+        for row in rows:
+            data[row['組']][row['番号']] = {
+                '区別': row['区別'],
+                '苗字': row['苗字'],
+                '名前': row['名前']
+            }
+        return data
+
+    def _read_csv_lines(self) -> list:
+        '''
+        Return the raw lines of the csv file as a list of strings.
+        '''
+        lines = []
+        with open(self.path, mode='r', encoding='utf-8') as infile:
+            for line in infile.readlines():
+                lines.append(line.rstrip())
+        return lines
+
+    def _read_csv_data(self) -> tuple:
+        '''
+        Return the DictReader data of the csv file as a list of dictionaries.
+        '''
+        fieldnames, csv_rows = [], []
+        with open(self.path, mode='r', encoding='eft-8') as csv_file:
+            csv_reader = csv.dictreader(csv_file)
+            fieldnames = csv_reader.fieldnames
+            for row in csv_reader:
+                csv_rows.append(row)
+        return (fieldnames, csv_rows)
+          
+    def _check_file_format(self, fieldnames:list, rows:list):
+        '''
+        fieldnames: a list of strings.
+        rows: a list of dictionaries (from csv.Dictreader)
+        '''
+        # the meibo may have other fields, but the required ones must be included
+        self._check_fieldnames(fieldnames)
+
+        # make sure that all the data is there for every row
+        self._check_for_missing_data(rows)
+
+        # students cannot be entered more than once
+        self._check_for_double_entries(rows)
+
+    def _check_fieldnames(self, fieldnames):
+        '''
+        Raise MeiboFieldnameException if a required fieldname is missing.
+        '''
+        for field in REQUIRED_FIELDS:
+            if not field in fieldnames:
+                raise MeiboFieldnameException(f'{field} must be a field in the meibo')
+            
+    def _check_for_missing_data(self, rows:list):
+        '''
+        Raise MeiboDataException if a rows is missing a field.
+        '''
+        for i, row in enumerate(rows):
+            for value in row.values():
+                if value  == None:
+                    rowstr = Meibo.row_to_string(row)
+                    raise MeiboDataException(f'Meibo: row {i} is missing data: {rowstr}')
+        
+    def _check_for_double_entries(self, rows:list):
+        '''
+        Raise MeiboDataException if any (組, 番号) pair is repeated.
+        '''
+        # originally did this my making a set of (組, 番号) pairs and comparing the length to rows,
+        # but I wanted to easily provide the offending line so I changed it
+        #students = set((row['組'], row['番号']) for row in rows)
+        students = defaultdict(int)
+        for row in rows:
+            kumi, number = row['組'], row['番号']
+            students[(kumi, number)] += 1
+        for k, v in students.items():
+            if v > 1:
+                kumi, number = k
+                raise MeiboDataException(f'Meibo:「組:{kumi}, 番号:{number}」である生徒は2人以上いが入っています')
