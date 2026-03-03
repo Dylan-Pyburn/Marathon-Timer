@@ -14,13 +14,18 @@ class MeiboDataError(Exception):
 
 
 class Meibo:
+    '''
+    Handle Meibo file operations, including lookup of class and student number.
+    '''
 
     def __init__(self, path:str=''):
+        '''
+        Constructor. Takes a string that is a path to a CSV file.
+        '''
         self.set_path(path)
 
         self.lines = []  # the lines of the meibo file as stripped strings
         self.data  = {}  # the parsed data from the meibo file
-
 
     def set_path(self, path:str):
         '''
@@ -29,7 +34,7 @@ class Meibo:
         '''
         # must be a string
         if not isinstance(path, str):
-            raise TypeError(f'Meibo path must be a string, but was {type(path)}')
+            raise TypeError(f'Meibo: path must be a {str}, but was {type(path)}')
         
         # can be blank, otherwise must be a CSV
         if not path == '' and  not path.split('.')[-1] == 'csv':
@@ -39,7 +44,7 @@ class Meibo:
 
     def clear(self):
         '''
-        DELETE ALL LINES AND DATA, as well as the set path.
+        DELETE ALL LINES AND DATA, as well as the path.
         '''
         self.path = ''
         self.lines.clear()
@@ -75,16 +80,11 @@ class Meibo:
 
     def lookup(self, studentClass:str, studentNumber:str=None) -> dict:
         # studentClass must be a string and be in the dictionary
-        if not isinstance(studentClass, str):
-            raise TypeError(f'studentClass should be {str}, was {type(studentClass)}')
-        if not studentClass in self.data:
-            raise KeyError(f'Meibo: class "{studentClass}" is not in the meibo')
+        self._check_student_class(studentClass)
         
         # if provided, studentNumber should be string, and be in the class
-        if studentNumber and not isinstance(studentNumber, str):
-            raise TypeError(f'studentNumber should be {str}, was {type(studentNumber)}')
-        if studentNumber and not studentNumber in self.data[studentClass]:
-            raise KeyError(f'Meibo: class "{studentClass}" has no student number "{studentNumber}"')
+        if studentNumber:
+            self._check_student_number(studentClass, studentNumber)
             
         # if only studentNumber is provided, return dictionary
         # containing all students for that class
@@ -94,7 +94,6 @@ class Meibo:
         # otherwise return the student data for the specified number
         else:
             return self.data[studentClass][studentNumber]
-
 
     def get_path(self) -> str:
         '''
@@ -107,6 +106,14 @@ class Meibo:
         Return a list containing all classes present in the meibo.
         '''
         return [k for k  in self.data]
+
+    def get_students(self, studentClass:str) -> list:
+        '''
+        Return a dictionary who's keys are student numbers
+        and values are dictionaries of student data.
+        '''
+        self._check_student_class(studentClass)
+        return self.data[studentClass]
 
     def get_lines(self):
         '''
@@ -134,6 +141,20 @@ class Meibo:
         return ', '.join([f'{k}: {v}' for k,v in row.items()])
     
     #=============================================
+    
+    def _check_student_class(self, studentClass:str):
+        # studentClass must be a string and be in the dictionary
+        if not isinstance(studentClass, str):
+            raise TypeError(f'studentClass should be {str}, was {type(studentClass)}')
+        if not studentClass in self.data:
+            raise KeyError(f'Meibo: class "{studentClass}" is not in the meibo')
+        
+    def _check_student_number(self, studentClass:str, studentNumber:str):
+        # if provided, studentNumber should be string, and be in the class
+        if studentNumber and not isinstance(studentNumber, str):
+            raise TypeError(f'studentNumber should be {str}, was {type(studentNumber)}')
+        if studentNumber and not studentNumber in self.data[studentClass]:
+            raise KeyError(f'Meibo: class "{studentClass}" has no student number "{studentNumber}"')
     
     def _parse_data(self,  rows:list):
         '''
