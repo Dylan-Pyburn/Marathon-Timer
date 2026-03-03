@@ -9,6 +9,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     '''
     Add editing and deletion to CTkScrollableFrame.
     The best part? You can easily know which button was clicked!
+
+    Currently only supports strings for the label.
     '''
 
     def __init__(self, parent, command:function=None, **kwargs) ->None:
@@ -25,12 +27,80 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         self.configure(border_width=1)
         
         self.command = command
+        self.rows    = []
 
+
+    def add_item(self, item:str, showDelBtn:bool=True):
+        '''
+        Add an item to the bottom of the list.
+        params:
+            item    : the item to be added in string form
+        '''
+        label  = self._make_label(item)
+        button = self._make_delete_button()
+
+        # add to the end of the list (the bottom)
+        label.grid(row=len(self.rows), column=0, pady=(0, 10), sticky="w")
+        if showDelBtn:
+            button.grid(row=len(self.rows), column=1, pady=(0, 10), padx=5)
+
+        self.rows.append((label, button))
+    
+
+    def get_item(self, rowNum:int):
+        '''
+        Return the name of the text of the given itemNum
+        '''
+        if rowNum < 0 or rowNum >= len(self.rows):
+            return
         
+        label, _ = self.rows[rowNum]
+        return label
+    
+    
+    def edit_item(self, itemNum:int, newItem:str):
+        '''
+        TODO
+        Update the text of the given itemNum
+        '''
+        return
 
-        self.rows = {}
-        self.items = []
-        self.buttons = []
+        if itemNum < 0 or itemNum >= len(self.items):
+            return
+        
+        label = self.items[itemNum]
+        label.configure(text=newItem)
+
+
+    def remove_item(self, rowNum):
+        '''
+        Delete itemNum.
+        '''
+        if rowNum < 0 or rowNum >= len(self.rows):
+            return
+
+        item, button = self.rows[rowNum]
+
+        item.destroy()
+        button.destroy()
+        self.rows.remove(self.rows[rowNum])
+
+
+    def clear(self):
+        '''
+        Remove all items
+        '''
+        if len(self.rows) == 0:
+            return
+
+        for item, button in self.rows:
+            item.destroy()
+            button.destroy()
+        self.rows.clear()
+
+    #=============================================
+    #       Widgets
+    #=============================================
 
     def _make_label(self, text):
         return ctk.CTkLabel(self, 
@@ -53,115 +123,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             font            = ctk.CTkFont(size=20, weight='bold')
         )
         if self.command:
-            x = len(self.buttons)
+            x = len(self.rows)
             button.configure(command=lambda: self.command(x))
         return button
-
-
-    def add_item(self, item:str, showDelBtn:bool=True):
-        '''
-        Add an item to the bottom of the list.
-        params:
-            item    : the item to be added in string form
-        '''
-        label  = self._make_label(item)
-        button = self._make_delete_button()
-
-        # add to the end of the list (the bottom)
-        label.grid(row=len(self.items), column=0, pady=(0, 10), sticky="w")
-        if showDelBtn:
-            button.grid(row=len(self.buttons), column=1, pady=(0, 10), padx=5)
-
-        self.items.append(label)
-        self.buttons.append(button)
-    
-
-    def get_item(self, itemNum:int):
-        '''
-        Return the name of the text of the given itemNum
-        '''
-        if itemNum < 0 or itemNum >= len(self.items):
-            return
-        
-        return self.items[itemNum]
-    
-    
-    def edit_item(self, itemNum:int, newItem:str):
-        '''
-        TODO
-        Update the text of the given itemNum
-        '''
-        return
-
-        if itemNum < 0 or itemNum >= len(self.items):
-            return
-        
-        label = self.items[itemNum]
-        label.configure(text=newItem)
-
-
-    def remove_item(self, itemNum):
-        '''
-        Delete itemNum.
-        '''
-        if itemNum < 0 or itemNum >= len(self.items):
-            return
-
-        item = self.items[itemNum]
-        button = self.buttons[itemNum]
-
-        item.destroy()
-        if button:
-            button.destroy()
-
-        self.items.remove(item)
-        self.buttons.remove(button)
-
-
-    def clear(self):
-        '''
-        Remove all items
-        '''
-        if len(self.items) == 0:
-            return
-        
-        for item, button in zip(self.items, self.buttons):
-            item.destroy()
-            if button:
-             button.destroy()
-
-        self.items.clear()
-        self.buttons.clear()
-
-
-class App(ctk.CTk):
-
-    def __init__(self):
-        super().__init__()
-
-        self.buttonClear = ctk.CTkButton(self, text='clear', command=self.handle_clear)
-        self.buttonClear.pack()
-
-        self.sf = ScrollableButtonFrame(self, command=self.handle_button)
-
-        self.sf.add_item('hello')
-        self.sf.add_item('hi')
-        self.sf.add_item('whats up')
-
-        self.sf.pack()
-
-    def handle_button(self, buttonNum):
-        #self.sf.remove_item(buttonNum)
-
-        self.sf.edit_item(buttonNum, 'test')
-
-        print(buttonNum)
-
-    def handle_clear(self):
-        self.sf.clear()
-
-
-if __name__ == '__main__':
-    app = App()
-    app.mainloop()
 
