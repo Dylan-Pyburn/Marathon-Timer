@@ -35,6 +35,11 @@ class EntryController:
                 display the meibo data in the listbox
             if  fails: 
                 display error dialog
+
+        TODO
+        handle Meibo exceptions
+        file not found error
+
         '''
         label = self.view.labelMeiboPath
 

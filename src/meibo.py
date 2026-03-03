@@ -4,11 +4,11 @@ import csv
 REQUIRED_FIELDS = ['組','番号','区別','苗字','名前']
 
 
-class MeiboFieldnameException(Exception):
+class MeiboFieldnameError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class MeiboDataException(Exception):
+class MeiboDataError(Exception):
     def __init__(self, message):
         super().__init__(message)
 
@@ -27,9 +27,12 @@ class Meibo:
         Set the path to the meibo file.
         Must be a CSV file.
         '''
-        if not isinstance(str, path):
+        # must be a string
+        if not isinstance(path, str):
             raise TypeError(f'Meibo path must be a string, but was {type(path)}')
-        if path.split('.')[-1] == 'csv':
+        
+        # can be blank, otherwise must be a CSV
+        if not path == '' and  not path.split('.')[-1] == 'csv':
             raise ValueError('Meibo path must be a csv file.')
         
         self.path = path
@@ -69,10 +72,6 @@ class Meibo:
     #=============================================
     #       Data Access
     #=============================================
-
-    @overload
-    def __getitem__(self, studentClass:str):
-        return self.data[studentClass]
 
 
     def lookup(self, studentClass:str, studentNumber:str) -> dict:
@@ -145,8 +144,8 @@ class Meibo:
         Return the DictReader data of the csv file as a list of dictionaries.
         '''
         fieldnames, csv_rows = [], []
-        with open(self.path, mode='r', encoding='eft-8') as csv_file:
-            csv_reader = csv.dictreader(csv_file)
+        with open(self.path, mode='r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
             fieldnames = csv_reader.fieldnames
             for row in csv_reader:
                 csv_rows.append(row)
@@ -168,25 +167,25 @@ class Meibo:
 
     def _check_fieldnames(self, fieldnames):
         '''
-        Raise MeiboFieldnameException if a required fieldname is missing.
+        Raise MeiboFieldnameError if a required fieldname is missing.
         '''
         for field in REQUIRED_FIELDS:
             if not field in fieldnames:
-                raise MeiboFieldnameException(f'{field} must be a field in the meibo')
+                raise MeiboFieldnameError(f'{field} must be a field in the meibo')
             
     def _check_for_missing_data(self, rows:list):
         '''
-        Raise MeiboDataException if a rows is missing a field.
+        Raise MeiboDataError if a rows is missing a field.
         '''
         for i, row in enumerate(rows):
             for value in row.values():
                 if value  == None:
                     rowstr = Meibo.row_to_string(row)
-                    raise MeiboDataException(f'Meibo: row {i} is missing data: {rowstr}')
+                    raise MeiboDataError(f'Meibo: row {i} is missing data: {rowstr}')
         
     def _check_for_double_entries(self, rows:list):
         '''
-        Raise MeiboDataException if any (組, 番号) pair is repeated.
+        Raise MeiboDataError if any (組, 番号) pair is repeated.
         '''
         # originally did this my making a set of (組, 番号) pairs and comparing the length to rows,
         # but I wanted to easily provide the offending line so I changed it
@@ -198,4 +197,4 @@ class Meibo:
         for k, v in students.items():
             if v > 1:
                 kumi, number = k
-                raise MeiboDataException(f'Meibo:「組:{kumi}, 番号:{number}」である生徒は2人以上いが入っています')
+                raise MeiboDataError(f'Meibo:「組:{kumi}, 番号:{number}」である生徒は2人以上いが入っています')
