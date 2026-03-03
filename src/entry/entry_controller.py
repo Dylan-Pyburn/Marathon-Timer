@@ -106,7 +106,9 @@ class EntryController:
         self.view.entryStudentClass.focus_set()
 
     def remove_entry(self, buttonNum):
+        self.view.scrollFrameDataView.get_item(buttonNum)
         self.view.scrollFrameDataView.remove_item(buttonNum)
+
 
     def save_entries(self):
         self._update_scrollFrameDataDisplay(viewmode='entry')

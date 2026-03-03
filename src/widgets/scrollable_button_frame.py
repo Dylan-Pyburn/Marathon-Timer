@@ -83,7 +83,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
 
         item.destroy()
         button.destroy()
-        self.rows.remove(self.rows[rowNum])
+        del self.rows[rowNum]
+        
+        self._update_button_nums()
 
 
     def clear(self):
@@ -101,6 +103,14 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     #=============================================
     #       Widgets
     #=============================================
+
+    def _update_button_nums(self):
+        if not self.command:
+            return
+        
+        for i, row in enumerate(self.rows):
+            _, button = row
+            button.configure(command=lambda: self.command(i))
 
     def _make_label(self, text):
         return ctk.CTkLabel(self, 
