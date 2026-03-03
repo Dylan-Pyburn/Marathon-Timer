@@ -5,13 +5,21 @@ meibo = Meibo()
 
 try:
 
-    meibo.set_path('sample_files/meibo2.csv')
+    meibo.set_path('sample_files/meibo.csv')
     meibo.load()
+
+    s= meibo.lookup('M31')
+    print(s)
     
-    print(meibo['M32'])
-    print(meibo['B1']['2'])
+    s = meibo.lookup('M31', '1')
+    print(s)
+    
     meibo.clear()
-    print(meibo['M32'])
+
+    
+    s = meibo.lookup('M31', '1')
+    print(s)
+    
 
 except Exception as e:
     print(e)

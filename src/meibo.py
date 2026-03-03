@@ -73,9 +73,28 @@ class Meibo:
     #       Data Access
     #=============================================
 
+    def lookup(self, studentClass:str, studentNumber:str=None) -> dict:
+        # studentClass must be a string and be in the dictionary
+        if not isinstance(studentClass, str):
+            raise TypeError(f'studentClass should be {str}, was {type(studentClass)}')
+        if not studentClass in self.data:
+            raise KeyError(f'Meibo: class "{studentClass}" is not in the meibo')
+        
+        # if provided, studentNumber should be string, and be in the class
+        if studentNumber and not isinstance(studentNumber, str):
+            raise TypeError(f'studentNumber should be {str}, was {type(studentNumber)}')
+        if studentNumber and not studentNumber in self.data[studentClass]:
+            raise KeyError(f'Meibo: class "{studentClass}" has no student number "{studentNumber}"')
+            
+        # if only studentNumber is provided, return dictionary
+        # containing all students for that class
+        if not studentNumber:
+            return self.data[studentClass]
+        
+        # otherwise return the student data for the specified number
+        else:
+            return self.data[studentClass][studentNumber]
 
-    def lookup(self, studentClass:str, studentNumber:str) -> dict:
-        raise NotImplementedError
 
     def get_path(self) -> str:
         '''
