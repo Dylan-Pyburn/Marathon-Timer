@@ -21,6 +21,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         '''
         super().__init__(parent, **kwargs)
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
 
         self.command = command
 
@@ -35,7 +37,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             item    : the item to be added in string form
         '''
         label   = ctk.CTkLabel(self, text=item, compound="left", padx=5, anchor="w")
-        button  = ctk.CTkButton(self, text='X')
+        button  = ctk.CTkButton(self, text='X', fg_color='transparent', text_color='red', font=ctk.CTkFont(size=20))
 
         if self.command:
             x = len(self.buttons)

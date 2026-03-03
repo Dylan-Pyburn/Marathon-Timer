@@ -65,7 +65,6 @@ class EntryController:
         Handle the choosing of a new file or loading an existing one
         '''
         label = self.view.labelEntryPath
-        self._reset_label(label)
 
         path = self._save_as_dialog('結果ファイル')
         print(f'"{path}"')
@@ -100,7 +99,7 @@ class EntryController:
             return
     
         self.model.add_entry(studentClass, studentNumber, studentRank)
-        self._update_listboxDataView(viewmode='entry')
+        self._update_scrollFrameDataDisplay(viewmode='entry')
         
         # because its nicer for the user:
         self._reset_entryvars()
@@ -110,7 +109,7 @@ class EntryController:
         self.view.scrollFrameDataView.remove_item(buttonNum)
 
     def save_entries(self):
-        self._update_listboxDataView(viewmode='entry')
+        self._update_scrollFrameDataDisplay(viewmode='entry')
         label = self.view.labelMessage
         
         if len(self.model.get_entry_rows()) == 0:
@@ -134,12 +133,12 @@ class EntryController:
     def handle_radio_sort(self):
         if self.view.var_radioDataView.get() != 'entry':
             return
-        self._update_listboxDataView()
+        self._update_scrollFrameDataDisplay()
 
     def handle_checkbutton_sort(self):
         if self.view.var_radioDataView.get() != 'entry':
             return
-        self._update_listboxDataView()
+        self._update_scrollFrameDataDisplay()
 
     #=============================================
     #      Dialogs, UI Updates
@@ -155,12 +154,13 @@ class EntryController:
         # set a new sortmode if provided otherwise use the current one
         if sortmode in RADIO_SORT_MODES:
             self.view.var_radioDataSort.set(sortmode)
-        else:
-            sortmode = self.view.var_radioDataSort.get()
 
         self.view.scrollFrameDataView.clear()
         if viewmode == 'meibo':
             self._show_data_meibo()
+        elif viewmode == 'entry':
+            self._show_data_entries()
+        
 
     def _show_data_meibo(self):
         data = self.model.get_meibo_rows()
@@ -168,9 +168,7 @@ class EntryController:
             self.view.scrollFrameDataView.add_item(line)
 
 
-    def _show_listbox_entries(self):
-        self.view.listboxDataView.delete(0, 'end')
-        
+    def _show_data_entries(self):
         sortmode    = self.view.var_radioDataSort.get()
         data        = self.model.get_entries(sortmode)
 
@@ -183,7 +181,7 @@ class EntryController:
         data = [line for line in data if line['性別'] in selectedGenders]
         for line in data:
             entrystr = EntryModel.get_entry_str(line)
-            self.view.listboxDataView.insert('end', entrystr)
+            self.view.scrollFrameDataView.add_item(entrystr)
 
     def _open_file_dialog(self, title:str, initialdir:str='.') -> str:     
         path = fd.askopenfilename(

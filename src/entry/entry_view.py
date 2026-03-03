@@ -144,13 +144,17 @@ class EntryView(ctk.CTkFrame):
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
         
         self.frameDataViewDisplay   = ctk.CTkFrame(self.frameDataView)
-        self.scrollFrameDataView = sf.ScrollableButtonFrame(self.frameDataViewDisplay, command=self.clicked_scrollFrameDelete)
+        self.frameDataViewDisplay.columnconfigure(0, weight=1)
+        self.frameDataViewDisplay.columnconfigure(1, weight=1)
+
+        self.scrollFrameDataView    = sf.ScrollableButtonFrame(self.frameDataViewDisplay, 
+                                                        command=self.clicked_scrollFrameDelete)
 
         #---- Placement --------------------------
-        self.frameDataView.pack(side=tk.TOP, pady=10)
+        self.frameDataView.pack(side=tk.TOP, fill='both', pady=10)
         self.frameDataViewRadios.pack(side=tk.TOP)
-        self.frameDataViewDisplay.pack(side=tk.LEFT)
-        self.scrollFrameDataView.pack()
+        self.frameDataViewDisplay.pack(side=tk.TOP, fill='both')
+        self.scrollFrameDataView.grid(row=0, column=0, sticky='nswe')
 
         self.radioMeibo.pack(side=tk.LEFT)
         self.radioEntries.pack(side=tk.LEFT)
@@ -160,7 +164,7 @@ class EntryView(ctk.CTkFrame):
 
 
     def configure_frameDataViewControls(self):
-        self.frameDataViewControls  = ctk.CTkFrame(self.frameDataView)
+        self.frameDataViewControls  = ctk.CTkFrame(self.frameDataViewDisplay)
 
         self.checkButtonMale        = ctk.CTkCheckBox(self.frameDataViewControls, text='男子', command=self.clicked_checkbox_sort,
                                                         variable=self.var_checkboxMale, onvalue=True, offvalue=False)
@@ -177,7 +181,7 @@ class EntryView(ctk.CTkFrame):
                                                         variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         
         #---- Placement --------------------------
-        self.frameDataViewControls.pack(side=tk.RIGHT)
+        self.frameDataViewControls.grid(row=0, column=1)
 
         self.checkButtonMale.pack(side=tk.TOP)
         self.checkButtonFemale.pack(side=tk.TOP)
