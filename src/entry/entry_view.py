@@ -16,7 +16,6 @@ class EntryView(ctk.CTkFrame):
         self.configure_vars()
         self.configure_frames()
 
-        
         # uncomment if you want to start in dark mode
         # self.switchAppTheme.toggle()
 
@@ -158,8 +157,8 @@ class EntryView(ctk.CTkFrame):
 
         self.radioMeibo.pack(side=tk.LEFT)
         self.radioEntries.pack(side=tk.LEFT)
-        self.radioTimerData.pack(side=tk.LEFT)
-        self.radioResults.pack(side=tk.LEFT)
+        #self.radioTimerData.pack(side=tk.LEFT)
+        #self.radioResults.pack(side=tk.LEFT)
         
 
 

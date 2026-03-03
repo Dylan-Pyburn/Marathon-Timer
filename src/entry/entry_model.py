@@ -23,7 +23,7 @@ class EntryModel:
         self.load_meibo()
     
     #=============================================
-    #      File Operations
+    #       Meibo
     #=============================================        
 
     def set_meibo_path(self, path:str) -> bool:
@@ -69,6 +69,32 @@ class EntryModel:
 
         return ''
 
+    def meibo_lookup(self, studentClass:str, studentNumber:str) -> dict:
+        '''
+        組と出席番号を使い、ある生徒の苗字、名前、性別を名簿から調べる
+
+        Params:
+            (str) studentClass  :  組
+            (str) studentNumber :  出席番号
+        Return:
+            ある: dict{苗字, 名前, 性別}
+            ない: None
+        '''
+        try:
+            return self.meibo_data[studentClass][studentNumber]
+        except KeyError:
+            return None
+
+    def get_meibo_data(self) -> dict:
+        return self.meibo_data
+
+    def get_meibo_rows(self) -> list:
+        return self.meibo_rows
+    
+    #=============================================
+    #       Entries
+    #=============================================        
+
     def get_entries_path(self) -> str:
         return self.entries_path
     
@@ -88,29 +114,8 @@ class EntryModel:
         except:
             return f'couldn\'t write to file: "{self.entries_path}"'
 
-    #=============================================
-    #      Data Processing
-    #=============================================
-
-    @staticmethod
     def get_entry_str(entry:dict) -> str:
         return f'{entry['性別']}{entry['順位']}  {entry['組']}  #{entry['番号']}  {entry['苗字']} {entry['名前']}'
-
-    def meibo_lookup(self, studentClass:str, studentNumber:str) -> dict:
-        '''
-        組と出席番号を使い、ある生徒の苗字、名前、性別を名簿から調べる
-
-        Params:
-            (str) studentClass  :  組
-            (str) studentNumber :  出席番号
-        Return:
-            ある: dict{苗字, 名前, 性別}
-            ない: None
-        '''
-        try:
-            return self.meibo_data[studentClass][studentNumber]
-        except KeyError:
-            return None
 
     def entry_lookup(self, studentClass, studentNumber) -> dict:
         '''
@@ -147,16 +152,9 @@ class EntryModel:
         }
         newEntryStr = '  '.join([v for v in newEntry.values()])
 
-        self.entry_rows.append(newEntryStr)
         self.entry_data.append(newEntry)
         return newEntryStr
 
-    def get_meibo_data(self) -> dict:
-        return self.meibo_data
-
-    def get_meibo_rows(self) -> list:
-        return self.meibo_rows
-    
     def get_entry_rows(self,sortmode='newest'):
         data = self.get_entries(sortmode)
         return [EntryModel.get_entry_str(entry) for entry in data]
@@ -192,6 +190,10 @@ class EntryModel:
     
     def get_meibo_classes(self):
         return self.meibo_classes
+
+    #=============================================
+    #      Data Processing
+    #=============================================
 
     #=============================================
     #      Data Validataion

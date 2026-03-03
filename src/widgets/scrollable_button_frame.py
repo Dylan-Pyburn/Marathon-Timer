@@ -29,6 +29,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         self.command = command
         self.rows    = []
 
+    def set_command(self, newCommand:function):
+        self.command = newCommand
+
 
     def add_item(self, item:str, showDelBtn:bool=True):
         '''

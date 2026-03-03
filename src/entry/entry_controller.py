@@ -147,15 +147,16 @@ class EntryController:
     #=============================================
 
     def _update_scrollFrameDataDisplay(self,  viewmode:str='', sortmode=''):
-        # set a new viewmode if provided otherwise use the current one
+        # set a new viewmode if provided
         if viewmode in RADIO_VIEW_MODES:
             self.view.var_radioDataView.set(viewmode)
-        else:
-            viewmode = self.view.var_radioDataView.get()
-
-        # set a new sortmode if provided otherwise use the current one
+    
+        # set a new sortmode if provided
         if sortmode in RADIO_SORT_MODES:
             self.view.var_radioDataSort.set(sortmode)
+       
+        viewmode = self.view.var_radioDataView.get()
+        sortmode = self.view.var_radioDataSort.get()
 
         self.view.scrollFrameDataView.clear()
         if viewmode == 'meibo':
