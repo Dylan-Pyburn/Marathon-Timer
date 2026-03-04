@@ -4,6 +4,9 @@ import customtkinter    as ctk
 from src.view.app_view          import AppView
 
 from src.model.meibo            import Meibo
+from src.model.entry_manager    import EntryManager
+
+
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
 from src.entry.entry_controller import EntryController
@@ -30,12 +33,15 @@ class App(ctk.CTk):
 
     
         self.entryFrame         = EntryView(appFrame.tabEntry)
-        self.entryModel         = EntryModel()
+        #self.entryModel         = EntryModel()
+        self.entryModel         = EntryManager()
         self.entryController    = EntryController(
             view  = self.entryFrame, 
             model = self.entryModel,
             meibo = meibo
         )
+        
+        self.entryModel.set_meibo(meibo)
 
         self.entryFrame.set_controller(self.entryController)
         self.entryFrame.pack(expand=True, fill=tk.BOTH)

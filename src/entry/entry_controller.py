@@ -2,6 +2,7 @@ import  tkinter         as tk
 import  customtkinter   as ctk
 from    tkinter import  filedialog  as fd
 
+from src.model.entry_manager import EntryManager
 from src.entry.entry_model import EntryModel
 
 RADIO_VIEW_MODES = ['meibo', 'entry']
