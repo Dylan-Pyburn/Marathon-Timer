@@ -1,7 +1,7 @@
 import  tkinter         as  tk
 import customtkinter    as ctk
 
-from src.meibo                  import Meibo
+from src.model.meibo            import Meibo
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
 from src.entry.entry_controller import EntryController
