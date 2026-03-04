@@ -1,8 +1,10 @@
 import csv
 
+from src.model.meibo import Meibo
+
 ENTRY_FIELDS = ['区別','順位','組','番号','苗字','名前']
 
-class Entry:
+class EntryManager:
     '''
     Entries can be uniquely identified by (gender, rank)
     '''
@@ -14,7 +16,13 @@ class Entry:
         self.path  = ''
         self.meibo = None
 
-        self.data  = {} # keys are (class, number) pairs
+        self.data  = []  # keys are (class, number) pairs
+
+    def set_meibo(self, meibo):
+        if not isinstance(meibo, Meibo):
+            raise TypeError(f'Entry: meibo must be of type {Meibo}')
+
+        self.meibo = meibo        
 
     #=============================================
     #       File Operatations
@@ -61,13 +69,15 @@ class Entry:
         fname       = studentInfo['名前']
         gender      = studentInfo['区別']
         
-        key = (studentClass, studentNumber)
-        newEntry[key] = {
-            '順位'  : studentRank,
+        newEntry = {
             '区別'  : gender,
+            '順位'  : studentRank,
+            '組'    : studentClass,
+            '番号'  : studentNumber,
             '苗字'  : lname,
             '名前'  : fname
         }
+        self.data.append(newEntry)
     
     def remove(self, entryStr):
         '''
@@ -75,23 +85,65 @@ class Entry:
             '区別 順位 組 番号 苗字 名前'
         '''
         _, _, studentClass, studentNumber, _, _ = entryStr.split()
-        key = (studentClass, studentNumber)
-        del self.items[key]
-
+        for entry in self.data:
+            if entry['組'] == studentClass and entry['番号'] == studentNumber:
+                break
+        self.data.remove(entry)
 
     #=============================================
     #       Data Access
     #=============================================
 
-    def lookup(self):
-        pass
+    def lookup(self, studentClass, studentNumber):
+        for entry in self.data:
+            if entry['組'] == studentClass and entry['番号'] == studentNumber:
+                return entry
 
-    def sorted(self, sortmode:str='newest'):
-        pass
+        return None
+
+    def get_entries(self, sortmode:str='newest'):
+        data = self.entry_data
+        
+        # reversed to show the end of the list first
+        if sortmode == 'newest':
+            return reversed(data)
+        
+        # not reversed because we'll desplay in the same order added
+        elif sortmode == 'oldest':
+            return data
+
+        # sort by rank, then by gender (reversed so males come first)
+        # Did nested sorted() because I'm too lazy to deepcopy data
+        elif sortmode == 'sortedMale':
+            return sorted(sorted(data, key=lambda x: x['順位']), 
+                            key=lambda x: x['区別'], reverse=True)
+
+        # sort by rank, then by gender (females will come first)
+        # Again did nested sorted() because I'm too lazy to deepcopy data
+        elif sortmode == 'sortedFemale':
+            return sorted(sorted(data, key=lambda x: x['順位']), 
+                            key=lambda x: x['区別'])
+
+        # just in case?
+        return data
+
+    @staticmethod
+    def entry_to_str(self, entry:dict):
+        '''
+        Entry string shall be of format;
+            '区別 順位 組 番号 苗字 名前'
+        '''
+        gender = entry['区別'] 
+        rank   = entry['順位']
+        kumi   = entry['組']
+        number = entry['番号']
+        lname  = entry['苗字']
+        fname  = entry['名前']
+        return f'{gender} {rank} {kumi} {number} {lname} {fname}' 
 
     def get_path(self):
         return self.path
-
+        
     #=============================================
     #       Data Validation
     #=============================================

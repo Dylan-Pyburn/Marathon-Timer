@@ -23,6 +23,7 @@ class Meibo:
         Constructor. Takes a string that is a path to a CSV file.
         '''
         self.set_path(path)
+        self.is_loaded = False
 
         self.lines    = []  # the lines of the meibo file as stripped strings
         self.csv_rows = []  # using this for formatting rows
@@ -51,6 +52,7 @@ class Meibo:
         self.lines.clear()
         self.csv_rows.clear()
         self.data.clear()
+        self.is_loaded = False
     
     def load(self) -> str:
         '''
@@ -73,9 +75,10 @@ class Meibo:
 
         # everything looks good, parse the data and
         # commit the data to the class variables
-        self.lines    = lines
-        self.csv_rows = csv_rows
-        self.data     = self._parse_data(csv_rows)
+        self.lines     = lines
+        self.csv_rows  = csv_rows
+        self.data      = self._parse_data(csv_rows)
+        self.is_loaded = True
 
     #=============================================
     #       Data Access
@@ -98,14 +101,14 @@ class Meibo:
         else:
             return self.data[studentClass][studentNumber]
 
+    def get_data(self, sortmode='newest'):
+        raise NotImplementedError
+
     def get_path(self) -> str:
         '''
         Return the path to the meibo file.
         '''
         return self.path
-
-    def sorted(self, sortmode='newest'):
-        raise NotImplementedError
 
     def get_classes(self) -> list:
         '''

@@ -23,7 +23,15 @@ class App(ctk.CTk):
     def start(self):
         self.mainloop()
 
+
+from src.model.meibo import Meibo
+from src.model.entry_manager import EntryManager
+
+
 if __name__ == '__main__':
     
-    App().start()
+    meibo = Meibo('sample_files/meibo.csv')
+    meibo.load()
 
+    entryManager = EntryManager()
+    entryManager.set_meibo(meibo)
