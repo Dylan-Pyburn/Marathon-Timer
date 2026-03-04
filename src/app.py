@@ -2,12 +2,15 @@ import  tkinter         as  tk
 #import  ttkbootstrap    as  ttk
 import customtkinter    as ctk
 
+from src.meibo                  import Meibo
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
 from src.entry.entry_controller import EntryController
 
 '''
 TODO
+    logging    
+
     entryview
         read from meibo:
             cant load new meibo once something has been entered(disable button)
@@ -35,7 +38,6 @@ TODO
 
     styling
         make it look purdy
-        auto hide/show scrollbar
         autofill entries
         entries combobox
 
@@ -66,10 +68,15 @@ class App(ctk.CTk):
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
         self.minsize(800, 650)
 
+        self.meibo              = Meibo()
 
         self.entryFrame         = EntryView(self)
         self.entryModel         = EntryModel()
-        self.entryController    = EntryController(self.entryFrame, self.entryModel)
+        self.entryController    = EntryController(
+            view  = self.entryFrame, 
+            model = self.entryModel,
+            meibo = self.meibo
+        )
 
         self.entryFrame.set_controller(self.entryController)
         self.entryFrame.pack(expand=True, fill=tk.BOTH)

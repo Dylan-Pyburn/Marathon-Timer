@@ -11,9 +11,10 @@ FILETYPES =  [('CSV ファイル', '*.csv')]
 
 class EntryController:
 
-    def __init__(self, view, model):
+    def __init__(self, view, model, meibo):
         self.view   = view
         self.model  = model
+        self.meibo  = meibo
 
         self.switch_app_theme()
 
@@ -42,27 +43,21 @@ class EntryController:
 
         '''
         label = self.view.labelMeiboPath
-
-        path = self._open_file_dialog('名簿')
+        path  = self._open_file_dialog('名簿')
 
         # cancel button clicked, nothing chosen
         if len(path) == 0:
             return
         
-        # make sure a CSV was chosen
-        if path.split('.')[-1] != 'csv':
-            self._show_label_error(label, 'choose a CSV file')
-
-        # try loading the CSV
-        self.model.set_meibo_path(path)
-        msg = self.model.load_meibo()        
-
-        if msg == '':
-            self._update_listboxDataView(viewmode='meibo')
-            self._show_label_message(label, path)
+        try:
+            self.meibo.set_path(path)
+            self.meibo.load()
             
-        else:
-            self._show_label_error(label, msg)
+            self._show_label_message(label, path)
+            self._update_scrollFrameDataDisplay(viewmode='meibo')
+
+        except Exception as e:
+            self._show_label_error(label, str(e))
 
 
     def choose_entry_file(self):
@@ -84,9 +79,6 @@ class EntryController:
         else:
             self.model.set_entries_path(path)
             self._show_label_message(label, path)
-
-    def choose_time_data_file(self):
-        pass
 
 
     def add_entry(self):
@@ -171,8 +163,8 @@ class EntryController:
         
 
     def _show_data_meibo(self):
-        data = self.model.get_meibo_rows()
-        for line in data:
+        lines = self.meibo.get_formatted_lines()
+        for line in lines:
             self.view.scrollFrameDataView.add_item(line, showDelBtn=False)
 
 

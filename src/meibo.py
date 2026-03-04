@@ -24,8 +24,9 @@ class Meibo:
         '''
         self.set_path(path)
 
-        self.lines = []  # the lines of the meibo file as stripped strings
-        self.data  = {}  # the parsed data from the meibo file
+        self.lines    = []  # the lines of the meibo file as stripped strings
+        self.csv_rows = []  # using this for formatting rows
+        self.data     = {}  # the parsed data from the meibo file
 
     def set_path(self, path:str):
         '''
@@ -48,6 +49,7 @@ class Meibo:
         '''
         self.path = ''
         self.lines.clear()
+        self.csv_rows.clear()
         self.data.clear()
     
     def load(self) -> str:
@@ -71,8 +73,9 @@ class Meibo:
 
         # everything looks good, parse the data and
         # commit the data to the class variables
-        self.lines = lines
-        self.data  = self._parse_data(csv_rows)
+        self.lines    = lines
+        self.csv_rows = csv_rows
+        self.data     = self._parse_data(csv_rows)
 
     #=============================================
     #       Data Access
@@ -121,6 +124,14 @@ class Meibo:
         '''
         return self.lines
     
+    def get_formatted_lines(self):
+        lines = []
+        for line in self.csv_rows:
+            values = [line[field] for field in REQUIRED_FIELDS]
+            kumi, number, gender, lname, fname = values
+            lines.append(f'{kumi:<6}{number:<4}{gender:<4}{lname:<4}{fname:<4}')
+        return lines
+
     def get_data(self):
         '''
         Return the dictionary of processed meibo data:
