@@ -8,51 +8,6 @@ from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
 from src.entry.entry_controller import EntryController
 
-'''
-TODO
-    logging    
-
-    entryview
-        read from meibo:
-            cant load new meibo once something has been entered(disable button)
-            class combobox
-            number combobox
-        combobox autocomplete
-    
-    entry file
-    open file: for editing
-        but how to verify that an okay meibo?
-            must choose a meibo if not chosen already
-            then all entries must pass  meibo_lookup
-
-    check that a loaded entry file has a correct meibo
-    
-    data entry
-        edit an entry from the listbox
-        display entries in forward or reverse order or sorted (have buttons that are only visible on entry mode)
-        can edit listbox lines, but only for entry mode
-        can delete listbox lines, but only for entry mode
-
-        loading
-            load entries file
-        
-
-    styling
-        make it look purdy
-        autofill entries
-        entries combobox
-
-    make displayed file loacation clickable?
-        
-    ask to save on program exit
-
-    add tabs
-
-    timer
-    stats
-'''
-
-
 WINDOW_TITLE    = 'マラソン タイマー'
 WINDOW_WIDTH    = 900
 WINDOW_HEIGHT   = 650
