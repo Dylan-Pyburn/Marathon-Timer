@@ -1,21 +1,27 @@
 
-from src.meibo import Meibo
+import customtkinter as ctk
 
-meibo = Meibo()
+from src.view.app_view import AppView
 
-try:
+WINDOW_TITLE    = 'マラソン タイマー'
+WINDOW_WIDTH    = 900
+WINDOW_HEIGHT   = 650
 
-    meibo.set_path('sample_files/meibo.csv')
-    meibo.load()
-
-    s= meibo.get_students('M31')
-    print(s)
+class App(ctk.CTk):
     
-    
-    
-    
+    def __init__(self):
+        super().__init__()
 
-except Exception as e:
-    print(e)
+        self.title(WINDOW_TITLE)
+        self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
+    
+        appview = AppView(self)
+        
 
+    def start(self):
+        self.mainloop()
+
+if __name__ == '__main__':
+    
+    App().start()
 

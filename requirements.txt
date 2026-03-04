@@ -1,5 +1,7 @@
-ttkbootstrap
 customtkinter
-tkshadowfy
+CTkMenuBar
 
 matplotlib
+
+tkshadowfy
+ttkbootstrap

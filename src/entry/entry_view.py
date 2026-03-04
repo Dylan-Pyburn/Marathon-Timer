@@ -5,9 +5,6 @@ import src.widgets.scrollable_button_frame as sf
 
 class EntryView(ctk.CTkFrame):
 
-    FRAME_THEME = {
-        'fg_color':'transparent',
-    }
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -17,8 +14,8 @@ class EntryView(ctk.CTkFrame):
         self.configure_frames()
 
         # uncomment if you want to start in dark mode
-        # self.switchAppTheme.toggle()
-
+        # self.switchAppTheme.toggle()  
+    
     def set_controller(self, controller):
         self.controller = controller
 
