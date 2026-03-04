@@ -9,13 +9,16 @@ class AppView(ViewFrame):
         super().__init__(parent)
     
         self.configure_menubar()
+        self.configure_tabview()
     
-    def configure_vars(self):
-        pass
-    
-    def configure_frames(self):
-        pass
-    
+    def configure_tabview(self):
+        self.tabview = ctk.CTkTabview(self)
+        
+        self.tabMeibo = self.tabview.add('名簿')
+        self.tabEntry = self.tabview.add('入力')
+        self.tabStats = self.tabview.add('合計')
+        
+        self.tabview.pack(fill='both', expand=True)
 
     def configure_menubar(self):
         self.menubar = tk.Menu(self)

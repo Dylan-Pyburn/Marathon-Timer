@@ -1,6 +1,8 @@
 import  tkinter         as  tk
 import customtkinter    as ctk
 
+from src.view.app_view          import AppView
+
 from src.model.meibo            import Meibo
 from src.entry.entry_view       import EntryView
 from src.entry.entry_model      import EntryModel
@@ -60,21 +62,24 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        ctk.set_default_color_theme('themes/theme.json')
-
-
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
         self.minsize(800, 650)
+        ctk.set_default_color_theme('themes/theme.json')
+        ctk.set_appearance_mode('light')
 
-        self.meibo              = Meibo()
+        meibo              = Meibo()
 
-        self.entryFrame         = EntryView(self)
+        appFrame = AppView(self)
+        appFrame.pack(fill='both', expand=True)
+
+    
+        self.entryFrame         = EntryView(appFrame.tabEntry)
         self.entryModel         = EntryModel()
         self.entryController    = EntryController(
             view  = self.entryFrame, 
             model = self.entryModel,
-            meibo = self.meibo
+            meibo = meibo
         )
 
         self.entryFrame.set_controller(self.entryController)

@@ -14,9 +14,11 @@ class App(ctk.CTk):
 
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
+        ctk.set_appearance_mode("light")
     
         appview = AppView(self)
-        
+
+        appview.pack(expand=True, fill="both") 
 
     def start(self):
         self.mainloop()
