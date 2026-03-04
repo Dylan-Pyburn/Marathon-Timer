@@ -206,10 +206,10 @@ class EntryController:
         return path
 
     def _show_label_message(self, label:tk.Label, message:str) -> None:
-        label.configure(text=message)
+        label.configure(text=message, text_color='black')
 
     def _show_label_error(self, label:tk.Label, message:str) -> None:
-        label.configure(text=message)
+        label.configure(text=message, text_color='red')
 
     def _reset_label(self, label:tk.Label) -> None:
         self._show_label_message(label, '')
