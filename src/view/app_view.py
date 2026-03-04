@@ -4,6 +4,15 @@ import customtkinter as ctk
 from src.view.view_frame import ViewFrame
 
 class AppView(ViewFrame):
+    '''
+    Main frame of the application. Has the menubar and tabview.
+    All other frames should be packed into this frame.
+
+    Accessible attributes:
+        tabMeibo
+        tabEntry
+        tabStats
+    '''
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -11,6 +20,10 @@ class AppView(ViewFrame):
         self.configure_menubar()
         self.configure_tabview()
     
+    #=============================================
+    #       Tabview
+    #=============================================
+
     def configure_tabview(self):
         self.tabview = ctk.CTkTabview(self)
         
@@ -19,6 +32,10 @@ class AppView(ViewFrame):
         self.tabStats = self.tabview.add('合計')
         
         self.tabview.pack(fill='both', expand=True)
+
+    #=============================================
+    #       MenuBar
+    #=============================================
 
     def configure_menubar(self):
         self.menubar = tk.Menu(self)
