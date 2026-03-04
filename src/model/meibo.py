@@ -15,7 +15,7 @@ class MeiboDataError(Exception):
 
 class Meibo:
     '''
-    Handle Meibo file operations, including lookup of class and student number.
+    Students can be uniquely identified by (class, number)
     '''
 
     def __init__(self, path:str=''):
@@ -103,6 +103,9 @@ class Meibo:
         Return the path to the meibo file.
         '''
         return self.path
+
+    def sorted(self, sortmode='newest'):
+        raise NotImplementedError
 
     def get_classes(self) -> list:
         '''
