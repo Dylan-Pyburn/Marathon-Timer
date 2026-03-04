@@ -57,7 +57,8 @@ class Meibo:
     def load(self) -> str:
         '''
         Read data from the file located at the set path.
-        Verify that the required fields are presents, no data is missing, and no students are repeated.
+        Verify that the required fields are presents, no data is missing, 
+        and no students are repeated.
         Return blank string if success, otherwise error message.
         '''
         # read the meibo file twice.
@@ -85,21 +86,20 @@ class Meibo:
     #=============================================
 
     def lookup(self, studentClass:str, studentNumber:str=None) -> dict:
-        # studentClass must be a string and be in the dictionary
-        self._check_student_class(studentClass)
+        if not studentClass in self.data:
+            return None
         
-        # if provided, studentNumber should be string, and be in the class
+        classData = self.data[studentClass]
+        
+        studentData = None
+        if studentNumber in classData:
+            studentData = classData[studentNumber]
+
         if studentNumber:
-            self._check_student_number(studentClass, studentNumber)
-            
-        # if only studentNumber is provided, return dictionary
-        # containing all students for that class
-        if not studentNumber:
-            return self.data[studentClass]
-        
-        # otherwise return the student data for the specified number
+            return studentData
         else:
-            return self.data[studentClass][studentNumber]
+            return classData
+        
 
     def get_data(self, sortmode='newest'):
         raise NotImplementedError
@@ -142,7 +142,8 @@ class Meibo:
         '''
         Return the dictionary of processed meibo data:
         Keys are 組.
-        Values are dictionaries whose keys are 番号 and values are student name and gender.
+        Values are dictionaries whose keys are 番号 
+        and values are student name and gender.
         '''
         return self.data
 

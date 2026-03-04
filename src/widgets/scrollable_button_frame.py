@@ -60,6 +60,14 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         label, _ = self.rows[rowNum]
         return label
     
+    def get_item_str(self, rowNum:int):
+        label = self.get_item(rowNum)
+
+        if not label:
+            return ''
+        
+        return label.cget('text')
+    
     
     def edit_item(self, itemNum:int, newItem:str):
         '''

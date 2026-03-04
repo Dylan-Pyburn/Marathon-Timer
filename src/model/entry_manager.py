@@ -4,6 +4,10 @@ from src.model.meibo import Meibo
 
 ENTRY_FIELDS = ['区別','順位','組','番号','苗字','名前']
 
+class EntryDataError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 class EntryManager:
     '''
     Entries can be uniquely identified by (gender, rank)
@@ -57,7 +61,9 @@ class EntryManager:
     #=============================================
 
     def clear(self):
-        pass
+        self.path = ''
+        self.meibo = None
+        self.data.clear()
 
     def add(self, studentClass:str, studentNumber:str, studentRank:str):
         self.check_entry_data(studentClass, studentNumber, studentRank)
@@ -102,7 +108,7 @@ class EntryManager:
         return None
 
     def get_entries(self, sortmode:str='newest'):
-        data = self.entry_data
+        data = self.data
         
         # reversed to show the end of the list first
         if sortmode == 'newest':
@@ -128,11 +134,15 @@ class EntryManager:
         return data
 
     @staticmethod
-    def entry_to_str(self, entry:dict):
+    def entry_to_str(entry:dict):
         '''
         Entry string shall be of format;
             '区別 順位 組 番号 苗字 名前'
         '''
+        for field in ENTRY_FIELDS:
+            if not field in entry:
+                raise EntryDataError(f'entry is missing 「{field}」')
+
         gender = entry['区別'] 
         rank   = entry['順位']
         kumi   = entry['組']
@@ -167,22 +177,24 @@ class EntryManager:
         '''
         Check that this (class, number) pair is in the meibo
         and has not yet been entered.
-        TODO
-          handle errors thrown by meibo
         '''
         # check that the student exists in the meibo
-        self.meibo.lookup(studentClass, studentNumber)
+        studentData = self.meibo.lookup(studentClass, studentNumber)
+        if not studentData:
+            raise EntryDataError(f'({studentClass}, #{studentNumber}) is not in the meibo')
          
         # check that the student is not already in the entries
-        # self.lookup(studentClass, studentNumber)
-
-        pass
+        entryData = self.lookup(studentClass, studentNumber)
+        if entryData:
+            raise EntryDataError(f'({studentClass}, #{studentNumber}) is already entered')
     
-    def _check_gender_rank(self, studentGender, studentRank):
+    def _check_gender_rank(self, gender, rank):
         '''
         Check that this (gender, rank) pair has not yet been entered.
         '''
-        pass
+        for entry in self.data:
+            if entry['区別'] == gender and entry['順位'] == rank:
+                raise EntryDataError(f'順位が {rank} 番の{gender}の生徒は既に入力されました')
 
     def _check_format(self, field:str, value):
         # must be a string
