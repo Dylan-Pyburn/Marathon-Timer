@@ -2,7 +2,7 @@ import csv
 
 ENTRY_FIELDS = ['区別','順位','組','番号','苗字','名前']
 
-class EntryManager:
+class Entry:
     '''
     Entries can be uniquely identified by (gender, rank)
     '''
@@ -14,8 +14,7 @@ class EntryManager:
         self.path  = ''
         self.meibo = None
 
-        self.lines = []
-        self.data  = []
+        self.data  = {} # keys are (class, number) pairs
 
     #=============================================
     #       File Operatations
@@ -62,22 +61,23 @@ class EntryManager:
         fname       = studentInfo['名前']
         gender      = studentInfo['区別']
         
-        newEntry = {
+        key = (studentClass, studentNumber)
+        newEntry[key] = {
             '順位'  : studentRank,
-            '組'    : studentClass,
-            '番号'  : studentNumber,
             '区別'  : gender,
             '苗字'  : lname,
             '名前'  : fname
         }
-
-        pass
     
-    def edit(self):
-        pass
+    def remove(self, entryStr):
+        '''
+        Entry string shall be of format;
+            '区別 順位 組 番号 苗字 名前'
+        '''
+        _, _, studentClass, studentNumber, _, _ = entryStr.split()
+        key = (studentClass, studentNumber)
+        del self.items[key]
 
-    def remove(self):
-        pass
 
     #=============================================
     #       Data Access
@@ -132,15 +132,6 @@ class EntryManager:
         '''
         pass
 
-    def _check_student_class_format(self, studentClass):
-        self._check_format('組', studentClass) 
-
-    def _check_student_number_format(self, studentNumber):
-        self._check_number_format('番号', studentNumber)
-
-    def _check_rank_format(self, studentRank):
-        self._check_number_format('番号', studentRank)
-        
     def _check_format(self, field:str, value):
         # must be a string
         if not isinstance(value, str):

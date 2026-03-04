@@ -144,18 +144,9 @@ class Meibo:
         return self.data
 
     #=============================================
-    #       Utility
+    #       Data Validation
     #=============================================
 
-    @staticmethod
-    def row_to_string(row:dict):
-        '''
-        Stringify a given row of data.
-        '''
-        return ', '.join([f'{k}: {v}' for k,v in row.items()])
-    
-    #=============================================
-    
     def _check_student_class(self, studentClass:str):
         # studentClass must be a string and be in the dictionary
         if not isinstance(studentClass, str):
