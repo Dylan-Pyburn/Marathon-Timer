@@ -29,7 +29,7 @@ class App(ctk.CTk):
         self.title(WINDOW_TITLE)
         self.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
         self.minsize(800, 650)
-        ctk.set_default_color_theme('themes/theme.json')
+        #ctk.set_default_color_theme('themes/theme.json')
         ctk.set_appearance_mode('light')
 
         meibo = Meibo()

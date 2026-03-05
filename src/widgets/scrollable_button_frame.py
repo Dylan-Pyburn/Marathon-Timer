@@ -52,14 +52,23 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         params:
             item    : the item to be added in string form
         '''
-        label  = self._make_item_button(self, item)
-        button = self._make_delete_button(self)
+        frame = ctk.CTkFrame(self,)
+        if len(self.rows) % 2 == 1:
+            frame.configure(fg_color='transparent')
 
-        label.grid(row=len(self.rows), column=0, sticky='w')
+        label  = self._make_item_button(frame, item)
+        button = self._make_delete_button(frame)
+
+        frame.pack(fill='x', padx=5, pady=2)        
+        label.pack(side='left', fill='x', expand=True,anchor='w')
         if showDelBtn:
-            button.grid(row=len(self.rows), column=1, sticky='e')
+            button.pack(side='right', anchor='e')
 
-        self.rows.append((label, button))
+        #label.grid(row=len(self.rows), column=0, sticky='w')
+        #if showDelBtn:
+        #    button.grid(row=len(self.rows), column=1, sticky='e')
+
+        self.rows.append((frame, label, button))
     
 
     def get_item(self, rowNum:int):
@@ -69,10 +78,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         if rowNum < 0 or rowNum >= len(self.rows):
             return
         
-        label, _ = self.rows[rowNum]
+        _, label, _ = self.rows[rowNum]
         return label
 
-    
     def get_item_str(self, rowNum:int):
         label = self.get_item(rowNum)
 
@@ -81,12 +89,11 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         
         return label.cget('text')
     
-    
     def edit_item(self, itemNum:int, newItem:str):
         '''
         Change the text of a given row.
         '''
-        label, _ = self.rows[itemNum]
+        _, label, _ = self.rows[itemNum]
         label.configure(text=newItem)
 
     def remove_item(self, rowNum):
@@ -96,8 +103,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         if rowNum < 0 or rowNum >= len(self.rows):
             return
 
-        item, button = self.rows[rowNum]
+        frame, item, button = self.rows[rowNum]
 
+        frame.destroy()
         item.destroy()
         button.destroy()
         del self.rows[rowNum]
@@ -112,7 +120,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         if len(self.rows) == 0:
             return
 
-        for item, button in self.rows:
+        for frame, item, button in self.rows:
+            frame.destroy()
             item.destroy()
             button.destroy()
         self.rows.clear()
@@ -123,7 +132,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
 
     def _update_button_nums(self):
         for i, row in enumerate(self.rows):
-            label, button = row
+            _, label, button = row
             if self.edit_command:
                 label.configure(command=lambda: self.edit_command(i))
             if self.delete_command:
@@ -142,6 +151,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         button = ctk.CTkButton(
             parent, 
             text            = item,
+            anchor          = 'w',
             corner_radius   = 0, 
             hover_color     = '#bab7b6',
             fg_color        = 'transparent',     
@@ -157,7 +167,6 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         button  = ctk.CTkButton(
             parent,
             text='X',
-            anchor          = 'center', 
             width           = 5, 
             corner_radius   = 100, 
             hover_color     = '#fcdad9', 
