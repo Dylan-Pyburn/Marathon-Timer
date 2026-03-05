@@ -80,11 +80,12 @@ class EntryView(ctk.CTkFrame):
         def place(frame, label, button):
             frame.grid_columnconfigure(0,weight=1)
             frame.grid_columnconfigure(1,weight=1)
-            frame.pack(side='top', fill='x', pady=4)
+            frame.pack(side='top', fill='x', pady=4, ipadx=5, ipady=2)
             if label:
                 label.grid( row=0, column=0, sticky='w')
             if button:
                 button.grid(row=0, column=1, sticky='e')
+            frame.configure(fg_color='grey90')
         
         place(frameMeiboSelection,    self.labelMeiboPath,    self.buttonChooseMeiboFile)
         place(frameEntrySelection,    self.labelEntryPath,    self.buttonChooseEntryFile)

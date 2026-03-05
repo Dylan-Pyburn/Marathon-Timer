@@ -23,7 +23,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         '''
         super().__init__(parent, **kwargs)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
+        #self.grid_columnconfigure(1, weight=1)
         self.configure(border_width=1)
         
         self.edit_command   = edit_command
@@ -52,8 +52,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         params:
             item    : the item to be added in string form
         '''
-        label  = self._make_item_button(item)
-        button = self._make_delete_button()
+        label  = self._make_item_button(self, item)
+        button = self._make_delete_button(self)
 
         label.grid(row=len(self.rows), column=0, sticky='w')
         if showDelBtn:
@@ -138,11 +138,12 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             font=ctk.CTkFont(size=20)
         )
 
-    def _make_item_button(self, item) -> ctk.CTkButton:
+    def _make_item_button(self, parent, item) -> ctk.CTkButton:
         button = ctk.CTkButton(
-            self, 
+            parent, 
             text            = item,
             corner_radius   = 0, 
+            hover_color     = '#bab7b6',
             fg_color        = 'transparent',     
             text_color      = 'black',
             font            = ctk.CTkFont(size=14,)
@@ -152,9 +153,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             button.configure(command=lambda: self.edit_command(x))
         return button
 
-    def _make_delete_button(self) -> ctk.CTkButton:
+    def _make_delete_button(self, parent) -> ctk.CTkButton:
         button  = ctk.CTkButton(
-            self,
+            parent,
             text='X',
             anchor          = 'center', 
             width           = 5, 
