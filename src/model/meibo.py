@@ -23,13 +23,13 @@ class Meibo:
         Constructor. Takes a string that is a path to a CSV file.
         '''
         self.set_path(path)
-        self.is_loaded = False
+        self.is_loaded:bool = False
 
-        self.lines    = []  # the lines of the meibo file as stripped strings
-        self.csv_rows = []  # using this for formatting rows
-        self.data     = {}  # the parsed data from the meibo file
+        self.lines    : list = []  # the lines of the meibo file as stripped strings
+        self.csv_rows : list = []  # using this for formatting rows
+        self.data     : list = {}  # the parsed data from the meibo file
 
-    def set_path(self, path:str):
+    def set_path(self, path:str) -> None:
         '''
         Set the path to the meibo file.
         Must be a CSV file.
@@ -44,7 +44,7 @@ class Meibo:
         
         self.path = path
 
-    def clear(self):
+    def clear(self) -> None:
         '''
         DELETE ALL LINES AND DATA, as well as the path.
         '''
