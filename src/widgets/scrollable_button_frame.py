@@ -22,8 +22,6 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
                             ex: command = handle_button(buttonNum)
         '''
         super().__init__(parent, **kwargs)
-        self.grid_columnconfigure(0, weight=1)
-        #self.grid_columnconfigure(1, weight=1)
         self.configure(border_width=1)
         
         self.edit_command   = edit_command
@@ -64,13 +62,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         if showDelBtn:
             button.pack(side='right', anchor='e')
 
-        #label.grid(row=len(self.rows), column=0, sticky='w')
-        #if showDelBtn:
-        #    button.grid(row=len(self.rows), column=1, sticky='e')
-
         self.rows.append((frame, label, button))
     
-
     def get_item(self, rowNum:int):
         '''
         Return the name of the text of the given itemNum

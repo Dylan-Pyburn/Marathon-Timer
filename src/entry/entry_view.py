@@ -140,12 +140,12 @@ class EntryView(ctk.CTkFrame):
         self.radioResults           = ctk.CTkRadioButton(self.frameDataViewRadios, text='結果', value='results', 
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
         
-        self.frameDataViewDisplay   = ctk.CTkFrame(self.frameDataView)
-        self.frameDataViewDisplay.columnconfigure(0, weight=1)
-        self.frameDataViewDisplay.columnconfigure(1, weight=1)
+        #self.frameDataViewDisplay   = ctk.CTkFrame(self)
+        #self.frameDataViewDisplay.columnconfigure(0, weight=1)
+        #self.frameDataViewDisplay.columnconfigure(1, weight=1)
 
         self.scrollFrameDataView    = sf.ScrollableButtonFrame(
-            self.frameDataViewDisplay, 
+            self, 
             edit_command   = None,
             delete_command = self.clicked_scrollFrameDelete
         )
@@ -153,8 +153,8 @@ class EntryView(ctk.CTkFrame):
         #---- Placement --------------------------
         self.frameDataView.pack(side=tk.TOP, fill='both', pady=10, padx=150)
         self.frameDataViewRadios.pack(side=tk.TOP)
-        self.frameDataViewDisplay.pack(side=tk.TOP, fill='both')
-        self.scrollFrameDataView.pack(fill='x', expand=True)
+        #self.frameDataViewDisplay.pack(side=tk.TOP, expand=True)
+        self.scrollFrameDataView.pack(fill='both', expand=True, padx=150, pady=(5,15))
 
         self.radioMeibo.pack(side=tk.LEFT)
         self.radioEntries.pack(side=tk.LEFT)
@@ -227,8 +227,6 @@ class EntryView(ctk.CTkFrame):
             self.controller.save_entries()
 
     def clicked_radio_display(self):
-        #if self.controller:
-        #    self.controller.handle_radio_display()
         if self.controller:
             self.controller.handle_radio_display()
 
@@ -239,9 +237,6 @@ class EntryView(ctk.CTkFrame):
     def clicked_checkbox_sort(self):
         if self.controller:
             self.controller.handle_checkbutton_sort()
-
-    def clicked_listBoxData(self):
-        pass
 
     #==== Key Presses ============================
 
