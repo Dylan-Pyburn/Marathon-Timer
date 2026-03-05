@@ -52,9 +52,10 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         '''
         frame = ctk.CTkFrame(self,)
         if len(self.rows) % 2 == 1:
-            frame.configure(fg_color='transparent')
+            frame.configure(fg_color='grey90')
 
-        label  = self._make_item_button(frame, item)
+        #label  = self._make_item_button(frame, item)
+        label  = self._make_label(frame, item)
         button = self._make_delete_button(frame)
 
         frame.pack(fill='x', padx=5, pady=2)        
@@ -131,13 +132,15 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             if self.delete_command:
                 button.configure(command=lambda: self.delete_command(i))
 
-    def _make_label(self, text):
-        return ctk.CTkLabel(self, 
-            text=text, 
-            compound="left", 
-            padx=5, 
-            anchor="w",
-            font=ctk.CTkFont(size=20)
+    def _make_label(self, parent, item):
+        return ctk.CTkLabel(
+            parent,
+            text            = item, 
+            anchor          = 'w',
+            padx            = 5, 
+            fg_color        = 'transparent',     
+            text_color      = ["gray10","#DCE4EE"],
+            font            = ctk.CTkFont(size=16)
         )
 
     def _make_item_button(self, parent, item) -> ctk.CTkButton:
@@ -148,7 +151,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             corner_radius   = 0, 
             hover_color     = '#bab7b6',
             fg_color        = 'transparent',     
-            text_color      = 'black',
+            text_color      = ["gray10","#DCE4EE"],
             font            = ctk.CTkFont(size=14,)
         )
         if self.edit_command:

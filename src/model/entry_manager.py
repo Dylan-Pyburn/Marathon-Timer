@@ -177,7 +177,7 @@ class EntryManager:
         number = entry['番号']
         lname  = entry['苗字']
         fname  = entry['名前']
-        return f'{gender} {rank} {kumi} {number} {lname} {fname}' 
+        return f'{gender:<20} {rank} {kumi} {number} {lname} {fname}' 
 
     def get_path(self):
         return self.path

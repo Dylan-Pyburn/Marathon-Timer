@@ -84,7 +84,7 @@ class EntryView(ctk.CTkFrame):
                 label.grid( row=0, column=0, sticky='w')
             if button:
                 button.grid(row=0, column=1, sticky='e')
-            frame.configure(fg_color='grey90')
+            #frame.configure(fg_color='grey90')
         
         place(frameMeiboSelection,    self.labelMeiboPath,    self.buttonChooseMeiboFile)
         place(frameEntrySelection,    self.labelEntryPath,    self.buttonChooseEntryFile)
@@ -167,10 +167,10 @@ class EntryView(ctk.CTkFrame):
         self.radioMeibo.pack(side='left', padx=5)
         self.radioEntries.pack(side='left', padx=5)
 
-        frameDataView.pack(side='top', fill='both', pady=10, padx=150) # parent is self
+        frameDataView.pack(side='top', fill='both', expand=True, pady=10, padx=150) # parent is self
         self.scrollFrameDataView.pack(side='left', fill='both', expand=True, padx=5, pady=(5,15)) # parent is frameDataView
         
-        frameDataFilters.pack(side='right', fill='y', anchor='w', padx=5) # parent is frameDataView
+        frameDataFilters.pack(side='right',  anchor='center', padx=5) # parent is frameDataView
         self.checkButtonMale.pack(side='top')           
         self.checkButtonFemale.pack(side='top')
         separator.pack(side='top', fill='x', pady=10)
