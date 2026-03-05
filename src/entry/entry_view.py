@@ -36,7 +36,7 @@ class EntryView(ctk.CTkFrame):
         self.configure_frameDataEntry()
         self.configure_frameMessage()
         self.configure_frameDataView()
-        self.configure_frameDataViewControls()
+        #self.configure_frameDataViewControls()
     
     #=============================================
     #      UI Elements
@@ -150,7 +150,7 @@ class EntryView(ctk.CTkFrame):
         self.frameDataView.pack(side=tk.TOP, fill='both', pady=10, padx=150)
         self.frameDataViewRadios.pack(side=tk.TOP)
         self.frameDataViewDisplay.pack(side=tk.TOP, fill='both')
-        self.scrollFrameDataView.grid(row=0, column=0, sticky='nswe')
+        self.scrollFrameDataView.pack(fill='x', expand=True)
 
         self.radioMeibo.pack(side=tk.LEFT)
         self.radioEntries.pack(side=tk.LEFT)

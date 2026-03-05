@@ -39,13 +39,26 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         params:
             item    : the item to be added in string form
         '''
-        label  = self._make_label(item)
+        #label  = self._make_label(item)
+        
+        label = self._make_item_button(item)
         button = self._make_delete_button()
 
-        # add to the end of the list (the bottom)
-        label.grid(row=len(self.rows), column=0, pady=(0, 10), sticky="w")
+        label.grid(row=len(self.rows), column=0, sticky='w')
         if showDelBtn:
-            button.grid(row=len(self.rows), column=1, pady=(0, 10), padx=5)
+            button.grid(row=len(self.rows), column=1, sticky='e')
+
+        #label.pack(side='left', fill='x', expand=True)
+        #if showDelBtn:
+        #    button.pack(side='right', sticky='e')            
+
+
+        # add to the end of the list (the bottom)
+        #if showDelBtn:
+        #    label.grid(row=len(self.rows), column=0, pady=(0, 10), sticky="w")
+        #    button.grid(row=len(self.rows), column=1, pady=(0, 10), padx=5)
+        #else:
+        #    label.grid(row=len(self.rows), column=0, columnspan=2, pady=(0, 10), sticky="w")
 
         self.rows.append((label, button))
     
@@ -59,6 +72,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         
         label, _ = self.rows[rowNum]
         return label
+
     
     def get_item_str(self, rowNum:int):
         label = self.get_item(rowNum)
@@ -132,8 +146,20 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             font=ctk.CTkFont(size=20)
         )
 
+    def _make_item_button(self, item) -> ctk.CTkButton:
+        button = ctk.CTkButton(
+            self, 
+            text            = item,
+            corner_radius   = 0, 
+            fg_color        = 'transparent',     
+            text_color      = 'black',
+            font            = ctk.CTkFont(size=14,)
+        )
+        return button
+
     def _make_delete_button(self) -> ctk.CTkButton:
-        button  = ctk.CTkButton(self, 
+        button  = ctk.CTkButton(
+            self,
             text='X',
             anchor          = 'center', 
             width           = 5, 
