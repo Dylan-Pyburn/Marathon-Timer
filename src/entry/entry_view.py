@@ -143,8 +143,11 @@ class EntryView(ctk.CTkFrame):
         self.frameDataViewDisplay.columnconfigure(0, weight=1)
         self.frameDataViewDisplay.columnconfigure(1, weight=1)
 
-        self.scrollFrameDataView    = sf.ScrollableButtonFrame(self.frameDataViewDisplay, 
-                                                        command=self.clicked_scrollFrameDelete)
+        self.scrollFrameDataView    = sf.ScrollableButtonFrame(
+            self.frameDataViewDisplay, 
+            edit_command   = None,
+            delete_command = self.clicked_scrollFrameDelete
+        )
 
         #---- Placement --------------------------
         self.frameDataView.pack(side=tk.TOP, fill='both', pady=10, padx=150)

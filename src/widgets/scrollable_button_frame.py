@@ -13,7 +13,7 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     Currently only supports strings for the label.
     '''
 
-    def __init__(self, parent, command:function=None, **kwargs) ->None:
+    def __init__(self, parent, edit_command=None, delete_command=None, **kwargs) ->None:
         ''' 
         Constructor
         params:
@@ -26,12 +26,25 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         self.grid_columnconfigure(1, weight=1)
         self.configure(border_width=1)
         
-        self.command = command
-        self.rows    = []
+        self.edit_command   = edit_command
+        self.delete_command = delete_command
+        self.rows           = []
 
-    def set_command(self, newCommand:function):
-        self.command = newCommand
+    def set_edit_command(self, newCommand:function):
+        '''
+        Command must be a function that takes one argument (the row number).
+        '''
+        if not isinstance(newCommand, function):
+            raise TypeError(f'ScrollFrame: command must be a function, was {type(newCommand)}')
+        self.edit_command = newCommand
 
+    def set_delete_command(self, newCommand:function):
+        '''
+        Command must be a function that takes one argument (the row number).
+        '''
+        if not isinstance(newCommand, function):
+            raise TypeError(f'ScrollFrame: command must be a function, was {type(newCommand)}')
+        self.delete_command = newCommand
 
     def add_item(self, item:str, showDelBtn:bool=True):
         '''
@@ -39,26 +52,12 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
         params:
             item    : the item to be added in string form
         '''
-        #label  = self._make_label(item)
-        
-        label = self._make_item_button(item)
+        label  = self._make_item_button(item)
         button = self._make_delete_button()
 
         label.grid(row=len(self.rows), column=0, sticky='w')
         if showDelBtn:
             button.grid(row=len(self.rows), column=1, sticky='e')
-
-        #label.pack(side='left', fill='x', expand=True)
-        #if showDelBtn:
-        #    button.pack(side='right', sticky='e')            
-
-
-        # add to the end of the list (the bottom)
-        #if showDelBtn:
-        #    label.grid(row=len(self.rows), column=0, pady=(0, 10), sticky="w")
-        #    button.grid(row=len(self.rows), column=1, pady=(0, 10), padx=5)
-        #else:
-        #    label.grid(row=len(self.rows), column=0, columnspan=2, pady=(0, 10), sticky="w")
 
         self.rows.append((label, button))
     
@@ -85,17 +84,10 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     
     def edit_item(self, itemNum:int, newItem:str):
         '''
-        TODO
-        Update the text of the given itemNum
+        Change the text of a given row.
         '''
-        return
-
-        if itemNum < 0 or itemNum >= len(self.items):
-            return
-        
-        label = self.items[itemNum]
+        label, _ = self.rows[itemNum]
         label.configure(text=newItem)
-
 
     def remove_item(self, rowNum):
         '''
@@ -130,12 +122,12 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     #=============================================
 
     def _update_button_nums(self):
-        if not self.command:
-            return
-        
         for i, row in enumerate(self.rows):
-            _, button = row
-            button.configure(command=lambda: self.command(i))
+            label, button = row
+            if self.edit_command:
+                label.configure(command=lambda: self.edit_command(i))
+            if self.delete_command:
+                button.configure(command=lambda: self.delete_command(i))
 
     def _make_label(self, text):
         return ctk.CTkLabel(self, 
@@ -155,6 +147,9 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             text_color      = 'black',
             font            = ctk.CTkFont(size=14,)
         )
+        if self.edit_command:
+            x = len(self.rows)
+            button.configure(command=lambda: self.edit_command(x))
         return button
 
     def _make_delete_button(self) -> ctk.CTkButton:
@@ -169,8 +164,8 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             text_color      = 'red', 
             font            = ctk.CTkFont(size=20, weight='bold')
         )
-        if self.command:
+        if self.delete_command:
             x = len(self.rows)
-            button.configure(command=lambda: self.command(x))
+            button.configure(command=lambda: self.delete_command(x))
         return button
 
