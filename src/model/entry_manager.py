@@ -55,7 +55,7 @@ class EntryManager:
         s = t.strftime("%Y%m%d-%H%M%S")
         self.temp_path = f'{TEMP_DIR}/{s}-entry.csv'
 
-    def _write_data(self, temp:bool=False):
+    def _write_data(self, sortmode='newest', temp:bool=False):
         '''
         This was the original save function, but I wanted to hide writing
         to the temp file from code that uses this object, so now only
@@ -63,16 +63,18 @@ class EntryManager:
         '''
         outpath = self.temp_path if temp else self.save_path
         
+        data = self.get_entries(sortmode)
+        
         with open(outpath, mode='w', newline='', encoding='utf-8') as outfile:
             csv_writer = csv.DictWriter(outfile, fieldnames=ENTRY_FIELDS)
             csv_writer.writeheader()
-            csv_writer.writerows(self.data)
+            csv_writer.writerows(data)
     
     def _save_temp_data(self):
         self._write_data(temp=True) 
     
-    def save_data(self):
-        self._write_data(temp=False)
+    def save_data(self, sortmode='newest'):
+        self._write_data(sortmode, temp=False)
     
     def load(self):
         pass
