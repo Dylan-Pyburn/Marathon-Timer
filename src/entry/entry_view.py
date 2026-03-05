@@ -35,8 +35,7 @@ class EntryView(ctk.CTkFrame):
         self.configure_frameFileSelection()
         self.configure_frameDataEntry()
         self.configure_frameMessage()
-        self.configure_frameDataView()
-        #self.configure_frameDataViewControls()
+        self.configure_dataView()
     
     #=============================================
     #      UI Elements
@@ -127,10 +126,9 @@ class EntryView(ctk.CTkFrame):
         self.labelMessage.pack()
         self.frameMessage.pack(side='top', padx=200, pady=10)
 
-    def configure_frameDataView(self):
-        self.frameDataView          = ctk.CTkFrame(self)
-
-        self.frameDataViewRadios    = ctk.CTkFrame(self.frameDataView)
+    def configure_dataView(self):
+        #---- Meibo/Entries Radios ---------------
+        self.frameDataViewRadios    = ctk.CTkFrame(self)
         self.radioMeibo             = ctk.CTkRadioButton(self.frameDataViewRadios, text='名簿', value='meibo',
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
         self.radioEntries           = ctk.CTkRadioButton(self.frameDataViewRadios, text='順位データ', value='entry', 
@@ -139,57 +137,55 @@ class EntryView(ctk.CTkFrame):
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
         self.radioResults           = ctk.CTkRadioButton(self.frameDataViewRadios, text='結果', value='results', 
                                                         variable=self.var_radioDataView, command=self.clicked_radio_display)
-        
-        #self.frameDataViewDisplay   = ctk.CTkFrame(self)
-        #self.frameDataViewDisplay.columnconfigure(0, weight=1)
-        #self.frameDataViewDisplay.columnconfigure(1, weight=1)
 
+        #---- ScrollFrame -----------------------        
+        frameDataView               = ctk.CTkFrame(self)
         self.scrollFrameDataView    = sf.ScrollableButtonFrame(
-            self, 
+            frameDataView, 
             edit_command   = None,
             delete_command = self.clicked_scrollFrameDelete
         )
+        
+        #--- Filters -----------------------------
+        frameDataFilters        = ctk.CTkFrame(frameDataView)
+        self.checkButtonMale    = ctk.CTkCheckBox(frameDataFilters, text='男子', command=self.clicked_checkbox_sort,
+                                                        variable=self.var_checkboxMale, onvalue=True, offvalue=False)
+        self.checkButtonFemale  = ctk.CTkCheckBox(frameDataFilters, text='女子', command=self.clicked_checkbox_sort,
+                                                        variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
+        separator               = ttk.Separator(frameDataFilters, orient=tk.HORIZONTAL, )
+        self.radioNewest        = ctk.CTkRadioButton(frameDataFilters, text='最新', value='newest',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioOldest        = ctk.CTkRadioButton(frameDataFilters, text='最古', value='oldest',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioOrderMale     = ctk.CTkRadioButton(frameDataFilters, text='順位：男性', value='sortedMale',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
+        self.radioOrderFemale   = ctk.CTkRadioButton(frameDataFilters, text='順位：女性', value='sortedFemale',
+                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
 
         #---- Placement --------------------------
-        self.frameDataView.pack(side=tk.TOP, fill='both', pady=10, padx=150)
-        self.frameDataViewRadios.pack(side=tk.TOP)
-        #self.frameDataViewDisplay.pack(side=tk.TOP, expand=True)
-        self.scrollFrameDataView.pack(fill='both', expand=True, padx=150, pady=(5,15))
+        self.frameDataViewRadios.pack(side='top', pady=5) # parent is self
+        self.radioMeibo.pack(side='left', padx=5)
+        self.radioEntries.pack(side='left', padx=5)
 
-        self.radioMeibo.pack(side=tk.LEFT)
-        self.radioEntries.pack(side=tk.LEFT)
-        #self.radioTimerData.pack(side=tk.LEFT)
-        #self.radioResults.pack(side=tk.LEFT)
+        frameDataView.pack(side='top', fill='both', pady=10, padx=150) # parent is self
+        self.scrollFrameDataView.pack(side='left', fill='both', expand=True, padx=5, pady=(5,15)) # parent is frameDataView
         
+        frameDataFilters.pack(side='right', fill='y', anchor='w', padx=5) # parent is frameDataView
+        self.checkButtonMale.pack(side='top')           
+        self.checkButtonFemale.pack(side='top')
+        separator.pack(side='top', fill='x', pady=10)
+        self.radioNewest.pack(side='top')
+        self.radioOldest.pack(side='top')
+        self.radioOrderMale.pack(side='top')
+        self.radioOrderFemale.pack(side='top')
 
 
     def configure_frameDataViewControls(self):
         self.frameDataViewControls  = ctk.CTkFrame(self.frameDataViewDisplay)
 
-        self.checkButtonMale        = ctk.CTkCheckBox(self.frameDataViewControls, text='男子', command=self.clicked_checkbox_sort,
-                                                        variable=self.var_checkboxMale, onvalue=True, offvalue=False)
-        self.checkButtonFemale      = ctk.CTkCheckBox(self.frameDataViewControls, text='女子', command=self.clicked_checkbox_sort,
-                                                        variable=self.var_checkboxFemale, onvalue=True, offvalue=False)
-        separator                   = ttk.Separator(self.frameDataViewControls, orient=tk.HORIZONTAL, )
-        self.radioNewest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最新', value='newest',
-                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOldest            = ctk.CTkRadioButton(self.frameDataViewControls, text='最古', value='oldest',
-                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOrderMale         = ctk.CTkRadioButton(self.frameDataViewControls, text='順位：男性', value='sortedMale',
-                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
-        self.radioOrderFemale       = ctk.CTkRadioButton(self.frameDataViewControls, text='順位：女性', value='sortedFemale',
-                                                        variable=self.var_radioDataSort, command=self.clicked_radio_sort)
         
         #---- Placement --------------------------
-        self.frameDataViewControls.grid(row=0, column=1)
 
-        self.checkButtonMale.pack(side=tk.TOP)
-        self.checkButtonFemale.pack(side=tk.TOP)
-        separator.pack(side=tk.TOP, fill='x', pady=5)
-        self.radioNewest.pack(side=tk.TOP)
-        self.radioOldest.pack(side=tk.TOP)
-        self.radioOrderMale.pack(side=tk.TOP)
-        self.radioOrderFemale.pack(side=tk.TOP)
    
     #=============================================
     #      Commands
