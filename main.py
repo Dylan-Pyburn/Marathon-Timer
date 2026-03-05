@@ -1,5 +1,6 @@
 import  tkinter         as  tk
 import customtkinter    as ctk
+import os
 
 #-- Model ---------------------------------------- 
 from src.model.meibo            import Meibo
@@ -32,6 +33,8 @@ class App(ctk.CTk):
         #ctk.set_default_color_theme('themes/theme.json')
         ctk.set_appearance_mode('light')
 
+        self.init_temp_dir()
+
         meibo = Meibo()
 
         appFrame = AppView(self)
@@ -52,6 +55,10 @@ class App(ctk.CTk):
         self.entryView.pack(expand=True, fill=tk.BOTH)
 
         self.bind('<Return>', self.entryView.pressed_enter)
+
+    def init_temp_dir(self):
+        if not os.path.isdir('./temp'):
+            os.makedirs('./temp')
 
     def start(self):
         self.mainloop()

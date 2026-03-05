@@ -1,6 +1,9 @@
 import csv
+import datetime as dt
 
 from src.model.meibo import Meibo
+
+TEMP_DIR = './temp'
 
 ENTRY_FIELDS = ['区別','順位','組','番号','苗字','名前']
 
@@ -14,13 +17,12 @@ class EntryManager:
     '''
 
     def __init__(self):
-        '''
-        Construtor.
-        ''' 
-        self.path  = ''
-        self.meibo = None
-
-        self.data  = []  # keys are (class, number) pairs
+        self.temp_path = None
+        self.save_path = None
+        self.meibo     = None
+        self.data      = []  # keys are (class, number) pairs
+        
+        self._init_temp_file()
 
     def set_meibo(self, meibo):
         if not isinstance(meibo, Meibo):
@@ -32,7 +34,7 @@ class EntryManager:
     #       File Operatations
     #=============================================
 
-    def set_path(self, path:str):
+    def set_save_path(self, path:str):
         '''
         Set the path to the file that entries will be saved to.
         Must be a CSV file.
@@ -47,8 +49,30 @@ class EntryManager:
         
         self.path = path
     
-    def save(self):
-        pass
+    def _init_temp_file(self):
+        # set the filename for the temp file
+        t = dt.datetime.now()
+        s = t.strftime("%Y%m%d-%H%M%S")
+        self.temp_path = f'{TEMP_DIR}/{s}-entry.csv'
+
+    def _write_data(self, temp:bool=False):
+        '''
+        This was the original save function, but I wanted to hide writing
+        to the temp file from code that uses this object, so now only
+        writing to the user-chosen save file is public.
+        '''
+        outpath = self.temp_path if temp else self.save_path
+        
+        with open(outpath, mode='w', newline='', encoding='utf-8') as outfile:
+            csv_writer = csv.DictWriter(outfile, fieldnames=ENTRY_FIELDS)
+            csv_writer.writeheader()
+            csv_writer.writerows(self.data)
+    
+    def _save_temp_data(self):
+        self._write_data(temp=True) 
+    
+    def save_data(self):
+        self._write_data(temp=False)
     
     def load(self):
         pass
@@ -84,6 +108,7 @@ class EntryManager:
             '名前'  : fname
         }
         self.data.append(newEntry)
+        self._save_temp_data()
     
     def remove(self, entryStr):
         '''
@@ -95,6 +120,7 @@ class EntryManager:
             if entry['組'] == studentClass and entry['番号'] == studentNumber:
                 break
         self.data.remove(entry)
+        self._save_temp_data()
 
     #=============================================
     #       Data Access

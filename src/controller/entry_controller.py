@@ -88,6 +88,7 @@ class EntryController:
 
     def add_entry(self):
         label = self.view.labelMessage
+        self._show_label_message(label, '')
         
         studentClass    = self.view.var_studentClass.get().strip().upper()
         studentNumber   = self.view.var_studentNumber.get().strip().upper()
