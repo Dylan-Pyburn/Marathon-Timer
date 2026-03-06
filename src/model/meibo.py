@@ -137,9 +137,6 @@ class Meibo:
             kumi, number, gender, lname, fname = values
             lines.append(f'{kumi} {number} {gender} {lname} {fname}')
         
-        for line in lines:
-            print(line)
-
         return lines
     
     @staticmethod
