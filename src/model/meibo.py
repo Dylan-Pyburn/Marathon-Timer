@@ -135,12 +135,21 @@ class Meibo:
         for line in self.csv_rows:
             values = [line[field] for field in REQUIRED_FIELDS]
             kumi, number, gender, lname, fname = values
-            lines.append(f'{kumi:<10}{number:<5}{gender:<5}{lname:>10}    {fname:<10}')
+            lines.append(f'{kumi} {number} {gender} {lname} {fname}')
         
         for line in lines:
             print(line)
 
         return lines
+    
+    @staticmethod
+    def row_to_str(row):
+        '''
+        TODO
+        A static implementation of the above method, similar to how it is in EntryModel.
+        Can be implemented after sorting is implemented
+        '''
+        raise NotImplementedError
 
     def get_data(self):
         '''

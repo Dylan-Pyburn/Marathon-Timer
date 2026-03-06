@@ -120,7 +120,7 @@ class EntryView(ctk.CTkFrame):
     
     def configure_frameMessage(self):
         self.frameMessage   = ctk.CTkFrame(self)
-        self.labelMessage   = ctk.CTkLabel(self.frameMessage)
+        self.labelMessage   = ctk.CTkLabel(self.frameMessage, text='')
 
         #---- Placement --------------------------
         self.labelMessage.pack()

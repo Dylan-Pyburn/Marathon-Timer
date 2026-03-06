@@ -7,10 +7,8 @@ import customtkinter as ctk
 
 class ScrollableButtonFrame(ctk.CTkScrollableFrame):
     '''
-    Add editing and deletion to CTkScrollableFrame.
+    Add editing (not fully implemented yet) and deletion to CTkScrollableFrame.
     The best part? You can easily know which button was clicked!
-
-    Currently only supports strings for the label.
     '''
 
     def __init__(self, parent, edit_command=None, delete_command=None, **kwargs) ->None:
@@ -44,11 +42,41 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             raise TypeError(f'ScrollFrame: command must be a function, was {type(newCommand)}')
         self.delete_command = newCommand
 
+    
     def add_item(self, item:str, showDelBtn:bool=True):
+        frame = ctk.CTkFrame(self)
+
+        fields: list[str] = item.split()
+        labels: list[ctk.CTkLabel] = [self._make_label(frame, field) for field in fields]
+
+        '''TODO do this with grid'''
+        for i, label in enumerate(labels):
+            # assume the last two items are names, make the last name wider and align right
+            if i == len(labels) - 2:
+                label.configure(width=100, anchor='e')
+            label.pack(side='left')
+            
+        button = self._make_delete_button(frame)
+        if showDelBtn:
+            button.pack(side='right', anchor='e')
+            
+        frame.pack(fill='x', expand=True, anchor='w')
+        
+        self.rows.append((frame, labels, button))
+        self._color_frames()
+
+
+    def _add_item_(self, item:str, showDelBtn:bool=True):
         '''
         Add an item to the bottom of the list.
         params:
             item    : the item to be added in string form
+            
+
+        For the purposes of this program i am assuming the text is a list 
+        of values separated by spaces, the last two of which should always 
+        be the student last and first name (large to account for katakana names).
+        Split the string and make labels for each ones.
         '''
         frame = ctk.CTkFrame(self,)
         if len(self.rows) % 2 == 1:
@@ -64,83 +92,99 @@ class ScrollableButtonFrame(ctk.CTkScrollableFrame):
             button.pack(side='right', anchor='e')
 
         self.rows.append((frame, label, button))
+
     
-    def get_item(self, rowNum:int):
+    def get_item(self, rowNum:int) -> list[ctk.CTkLabel] | None:
         '''
-        Return the name of the text of the given itemNum
+        Return the list of labels of the given row.
+        None if rowNum is out of range.
         '''
         if rowNum < 0 or rowNum >= len(self.rows):
             return
         
-        _, label, _ = self.rows[rowNum]
-        return label
+        _, labels, _ = self.rows[rowNum]
+        return labels
 
-    def get_item_str(self, rowNum:int):
-        label = self.get_item(rowNum)
+    def get_item_str(self, rowNum:int) -> str | None:
+        '''
+        Return the text from the given row num.
+        None if rowNum is out of range.
+        '''
+        labels = self.get_item(rowNum)
 
-        if not label:
+        if not labels:
             return ''
         
-        return label.cget('text')
+        return ' '.join([l.cget('text') for l in labels])
     
-    def edit_item(self, itemNum:int, newItem:str):
+    def _edit_item(self, itemNum:int, newItem:str):
         '''
         Change the text of a given row.
         '''
+        raise NotImplementedError
+
         _, label, _ = self.rows[itemNum]
         label.configure(text=newItem)
 
     def remove_item(self, rowNum):
         '''
-        Delete itemNum.
+        Delete rowNum if it's in range.
         '''
-        if rowNum < 0 or rowNum >= len(self.rows):
-            return
-
-        frame, item, button = self.rows[rowNum]
-
-        frame.destroy()
-        item.destroy()
-        button.destroy()
+        self._destroy_row(rowNum)
         del self.rows[rowNum]
-        
+        self._color_frames()
         self._update_button_nums()
-
 
     def clear(self):
         '''
         Remove all items
         '''
-        if len(self.rows) == 0:
+        for n in range(len(self.rows)):
+            self._destroy_row(n)
+        self.rows.clear()
+
+    def _destroy_row(self, rowNum):
+        if rowNum < 0 or rowNum >= len(self.rows):
             return
 
-        for frame, item, button in self.rows:
-            frame.destroy()
-            item.destroy()
-            button.destroy()
-        self.rows.clear()
+        frame, labels, button = self.rows[rowNum]
+        frame.destroy()
+        button.destroy()
+        for label in labels:
+            label.destroy()
 
     #=============================================
     #       Widgets
     #=============================================
 
+    def _color_frames(self):
+        '''
+        Set a grey background for odd numbered rows.
+        '''
+        for i, row in enumerate(self.rows):
+            frame, _, _ = row
+            if i % 2 == 1:
+                frame.configure(fg_color='grey90')
+
     def _update_button_nums(self):
         for i, row in enumerate(self.rows):
-            _, label, button = row
-            if self.edit_command:
-                label.configure(command=lambda: self.edit_command(i))
-            if self.delete_command:
-                button.configure(command=lambda: self.delete_command(i))
+            _, labels, button = row
+            for label in labels:
+                if self.edit_command:
+                    label.configure(command=lambda: self.edit_command(i))
+                if self.delete_command:
+                    button.configure(command=lambda: self.delete_command(i))
 
     def _make_label(self, parent, item):
         return ctk.CTkLabel(
             parent,
             text            = item, 
             anchor          = 'w',
+            width           = 60,
             padx            = 5, 
             fg_color        = 'transparent',     
             text_color      = ["gray10","#DCE4EE"],
-            font            = ctk.CTkFont(size=16)
+            font            = ctk.CTkFont(size=16, )
         )
 
     def _make_item_button(self, parent, item) -> ctk.CTkButton:
