@@ -10,7 +10,7 @@ from src.model.entry_manager    import EntryManager
 from src.view.app_view          import AppView
 
 '''TODO'''
-from src.entry.entry_view       import EntryView
+from src.view.entry_view       import EntryView
 
 #-- Controller ----------------------------------- 
 from src.controller.entry_controller import EntryController
