@@ -31,7 +31,7 @@ class EntryView(ctk.CTkFrame):
         self.var_checkboxFemale = tk.BooleanVar(self, value=True)
     
     def configure_frames(self):
-        self.configure_frameAppTheme()
+        # self.configure_frameAppTheme()
         self.configure_frameFileSelection()
         self.configure_frameDataEntry()
         self.configure_frameMessage()
@@ -87,9 +87,9 @@ class EntryView(ctk.CTkFrame):
             #frame.configure(fg_color='grey90')
         
         place(frameMeiboSelection,    self.labelMeiboPath,    self.buttonChooseMeiboFile)
-        place(frameEntrySelection,    self.labelEntryPath,    self.buttonChooseEntryFile)
-        place(frameTimeDataSelection, self.labelTimeDataPath, self.buttonChooseTimeDataFile)
-        place(frameSaveEntries,       None,                   self.buttonSaveEntries)
+        # place(frameEntrySelection,    self.labelEntryPath,    self.buttonChooseEntryFile)
+        # place(frameTimeDataSelection, self.labelTimeDataPath, self.buttonChooseTimeDataFile)
+        # place(frameSaveEntries,       None,                   self.buttonSaveEntries)
         self.frameFileSelection.pack(fill='x', padx=200, pady=20)
 
 

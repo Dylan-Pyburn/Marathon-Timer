@@ -28,8 +28,9 @@ class EntryController:
     #=============================================
 
     def switch_app_theme(self):
-        darkmode = self.view.switchAppTheme.get()
-        ctk.set_appearance_mode( 'dark' if darkmode else 'light' )
+        # darkmode = self.view.switchAppTheme.get()
+        # ctk.set_appearance_mode( 'dark' if darkmode else 'light' )
+        pass
 
 
     def choose_meibo_file(self) -> None:

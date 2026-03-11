@@ -27,7 +27,7 @@ class AppView(ViewFrame):
     def configure_tabview(self):
         self.tabview = ctk.CTkTabview(self)
         
-        self.tabMeibo = self.tabview.add('名簿')
+        #self.tabMeibo = self.tabview.add('名簿')
         self.tabEntry = self.tabview.add('入力')
         self.tabStats = self.tabview.add('合計')
         

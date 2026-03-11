@@ -34,27 +34,24 @@ class App(ctk.CTk):
         ctk.set_appearance_mode('light')
 
         self.init_temp_dir()
-
-        meibo = Meibo()
-
         appFrame = AppView(self)
         appFrame.pack(fill='both', expand=True)
 
-    
-        self.entryView         = EntryView(appFrame.tabEntry)
-        self.entryModel         = EntryManager()
-        self.entryController    = EntryController(
-            view  = self.entryView, 
-            model = self.entryModel,
+        meibo              = Meibo()
+        entryView          = EntryView(appFrame.tabEntry)
+        entryModel         = EntryManager()
+        entryController    = EntryController(
+            view  = entryView, 
+            model = entryModel,
             meibo = meibo
         )
         
-        self.entryModel.set_meibo(meibo)
+        entryModel.set_meibo(meibo)
 
-        self.entryView.set_controller(self.entryController)
-        self.entryView.pack(expand=True, fill=tk.BOTH)
+        entryView.set_controller(entryController)
+        entryView.pack(expand=True, fill=tk.BOTH)
 
-        self.bind('<Return>', self.entryView.pressed_enter)
+        self.bind('<Return>', entryView.pressed_enter)
 
     def init_temp_dir(self):
         if not os.path.isdir('./temp'):
