@@ -179,13 +179,6 @@ class EntryView(ctk.CTkFrame):
         self.radioOrderMale.pack(side='top')
         self.radioOrderFemale.pack(side='top')
 
-
-    def configure_frameDataViewControls(self):
-        self.frameDataViewControls  = ctk.CTkFrame(self.frameDataViewDisplay)
-
-        
-        #---- Placement --------------------------
-
    
     #=============================================
     #      Commands
